@@ -1,5 +1,6 @@
 import { FC, useMemo, useState } from 'react';
-import { Card, Grid, CardActionArea, CardMedia, Box, Typography } from '@mui/material';
+import NextLink from 'next/link'
+import { Card, Grid, CardActionArea, CardMedia, Box, Typography, Link } from '@mui/material';
 import { IProduct } from '../../interfaces';
 
 interface Props {
@@ -25,12 +26,16 @@ export const ProductCard:FC<Props> = ({ product }) => {
         >
             <Card>
                 <CardActionArea>
-                    <CardMedia 
-                        className='fadeIn'
-                        component='img'
-                        image={productImage}
-                        alt={product.title}
-                    />
+                    <NextLink href='/product/slug' passHref prefetch={false}>
+                        <Link>
+                            <CardMedia 
+                                className='fadeIn'
+                                component='img'
+                                image={productImage}
+                                alt={product.title}
+                            />
+                        </Link>
+                    </NextLink>
                 </CardActionArea>
             </Card>
 
