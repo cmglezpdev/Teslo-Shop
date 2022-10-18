@@ -4,6 +4,7 @@ import { ShopLayout } from '../../layouts';
 import { initialData } from '../../database/products';
 import { ProductSlideshow } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
+import { ProductSizeSelector } from '../../components/products/ProductSizeSelector';
 
 const product = initialData.products[0];
 
@@ -26,8 +27,11 @@ const ProductPage = () => {
                     
                         <Box sx={{my: 2}}>
                             <Typography variant='subtitle2'>Total</Typography>
-                            
                             <ItemCounter />
+                            <ProductSizeSelector 
+                                selectedSize={ product.sizes[0] }
+                                sizes={product.sizes}
+                            />
                         </Box>
 
                         {/* Add to Cart */}
