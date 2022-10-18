@@ -32,10 +32,10 @@ export const Navbar = () => {
                         </Link>
                     </NextLink>
                 
-                    <NextLink href='/category/kid'>
+                    <NextLink href='/category/kids'>
                         <Link>
                             <Button>
-                                Kid
+                                Kids
                             </Button>
                         </Link>
                     </NextLink>
