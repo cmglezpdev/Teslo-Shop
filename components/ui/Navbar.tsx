@@ -7,7 +7,7 @@ export const Navbar = () => {
         <AppBar>
             <Toolbar>
                 <NextLink href='/' passHref>
-                    <Link display='flex' alignItems='center' underline='none'>
+                    <Link display='flex' alignItems='center'>
                         <Typography variant='h6'>Teslo |</Typography>
                         <Typography sx={{ml: 0.5}}>Shop</Typography>
                     </Link>
@@ -17,24 +17,24 @@ export const Navbar = () => {
 
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <NextLink href='/category/men'>
-                        <Link underline='none'>
-                            <Button>
+                        <Link>
+                            <Button variant='text'>
                                 Men
                             </Button>
                         </Link>
                     </NextLink>
                     
                     <NextLink href='/category/women'>
-                        <Link underline='none'>
-                            <Button>
+                        <Link>
+                            <Button variant='text'>
                                 Women
                             </Button>
                         </Link>
                     </NextLink>
                 
                     <NextLink href='/category/kids'>
-                        <Link underline='none'>
-                            <Button>
+                        <Link>
+                            <Button variant='text'>
                                 Kids
                             </Button>
                         </Link>
@@ -57,7 +57,7 @@ export const Navbar = () => {
                     </Link>
                 </NextLink>
 
-                <Button sx={{ml: 2}}>
+                <Button variant='text' sx={{ml: 2}}>
                     Menu
                 </Button>
 

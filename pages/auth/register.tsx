@@ -1,16 +1,9 @@
 import NextLink from 'next/link';
 import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
-import { useTheme } from '@mui/material'
 import { AuthLayout } from '../../layouts';
 
 
 const RegisterPage = () => {
-
-    // const theme = useTheme();
-    // const palette = theme.palette;
-
-    // console.log(theme)
-
 
     return (
         <AuthLayout title='Register in the store'>

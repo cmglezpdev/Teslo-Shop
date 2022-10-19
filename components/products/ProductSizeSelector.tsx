@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { Box } from '@mui/system';
+import { Box, Button } from '@mui/material';
 
 import { ISize } from '../../interfaces';
-import { Button } from '@mui/material';
 
 interface Props {
     selectedSize?: string;
@@ -17,8 +16,7 @@ export const ProductSizeSelector:FC<Props> = ({ selectedSize, sizes }) => {
                     <Button
                         key={size}
                         size='small'
-                        color={ selectedSize == size ? 'primary' : 'info' }
-                        // color='success'
+                        color={ size === selectedSize ? 'primary' : 'info' }
                     >
                         {size}
                     </Button>

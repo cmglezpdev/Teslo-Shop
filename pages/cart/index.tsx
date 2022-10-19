@@ -1,10 +1,8 @@
-import { Typography, Grid, Card, CardContent, Divider, Box, Button, useTheme } from '@mui/material';
+import { Typography, Grid, Card, CardContent, Divider, Box, Button } from '@mui/material';
 import { ShopLayout } from '../../layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart'
 
 const CartPage = () => {
-
-    const { palette } = useTheme();
 
     return (
         <ShopLayout title='Cart | 3 elements' pageDescription='Store Shopping Cart'>
@@ -24,7 +22,7 @@ const CartPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button className='circular-btn' sx={{color: 'white', backgroundColor: palette.primary.main}} fullWidth>
+                                <Button className='circular-btn' color='secondary' fullWidth>
                                     Checkout
                                 </Button>
                             </Box>

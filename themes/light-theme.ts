@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material';
 
 export const lightTheme = createTheme({
   palette: {
@@ -53,7 +53,7 @@ export const lightTheme = createTheme({
 
     MuiButton: {
       defaultProps: {
-        variant: 'outlined',
+        variant: 'contained',
         size: 'small',
         disableElevation: true,
       },

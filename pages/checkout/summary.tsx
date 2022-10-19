@@ -1,11 +1,9 @@
 import NextLink from 'next/link';
-import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, useTheme } from '@mui/material';
+import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link } from '@mui/material';
 import { ShopLayout } from '../../layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart'
 
 const SummaryPage = () => {
-
-    const { palette } = useTheme();
 
     return (
         <ShopLayout title='Order Summary' pageDescription='Order Summary'>
@@ -48,7 +46,7 @@ const SummaryPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button className='circular-btn' sx={{color: 'white', backgroundColor: palette.primary.main}} fullWidth>
+                                <Button className='circular-btn' color='secondary' fullWidth>
                                     Confirm Order
                                 </Button>
                             </Box>

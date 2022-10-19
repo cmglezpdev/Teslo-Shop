@@ -1,10 +1,8 @@
-import { Typography, Grid, TextField, FormControl, MenuItem, InputLabel, Select, Box, Button, useTheme } from '@mui/material';
+import { Typography, Grid, TextField, FormControl, MenuItem, Select, Box, Button } from '@mui/material';
 import { ShopLayout } from "../../layouts"
 
 
 const AddressPage = () => {
-
-    const { palette } = useTheme();
 
     return (
         <ShopLayout title='Address' pageDescription='Confirm destination address'>
@@ -49,7 +47,7 @@ const AddressPage = () => {
             </Grid>
 
             <Box sx={{mt:5}} display='flex' justifyContent='center'>
-                <Button color='secondary' className='circular-btn' sx={{px: 5, color: 'white', backgroundColor: palette.primary.main}}>
+                <Button color='secondary' className='circular-btn'>
                     Complete Order
                 </Button>
             </Box>
