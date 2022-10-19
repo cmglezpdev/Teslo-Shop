@@ -1,12 +1,10 @@
 import { createTheme } from '@mui/material/styles';
-import { red,  } from '@mui/material/colors';
-
 
 export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '##1E1E1E'
+      main: '#1E1E1E',
     },
     secondary: {
       main: '#3A64D8'
@@ -17,9 +15,11 @@ export const lightTheme = createTheme({
   },
   components: {
     MuiLink: {
-      defaultProps: {
-        underline: 'none',
-      },
+      styleOverrides: {
+       root: {
+        textDecoration: 'none'
+       } 
+      }
     },
 
     MuiAppBar: {
@@ -55,10 +55,9 @@ export const lightTheme = createTheme({
 
     MuiButton: {
       defaultProps: {
-        variant: 'contained',
+        variant: 'outlined',
         size: 'small',
         disableElevation: true,
-        color: 'info',
       },
       styleOverrides: {
         root: {

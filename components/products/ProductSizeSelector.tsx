@@ -17,8 +17,8 @@ export const ProductSizeSelector:FC<Props> = ({ selectedSize, sizes }) => {
                     <Button
                         key={size}
                         size='small'
-                        // color={ selectedSize == size ? 'primary' : 'info' }
-                        color={'secondary'}
+                        color={ selectedSize == size ? 'primary' : 'info' }
+                        // color='success'
                     >
                         {size}
                     </Button>
