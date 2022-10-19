@@ -15,11 +15,9 @@ export const lightTheme = createTheme({
   },
   components: {
     MuiLink: {
-      styleOverrides: {
-       root: {
-        textDecoration: 'none'
-       } 
-      }
+      defaultProps: {
+        underline: 'none'
+      },
     },
 
     MuiAppBar: {

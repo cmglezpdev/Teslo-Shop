@@ -1,10 +1,13 @@
 import NextLink from 'next/link';
-import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip } from '@mui/material';
+import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip, useTheme } from '@mui/material';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { ShopLayout } from '../../layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart'
 
 const OrderPage = () => {
+
+    const { palette } = useTheme();
+
     return (
         <ShopLayout title='Summary of the Order 3263573' pageDescription='Summary of the Order 3263573'>
             <Typography variant='h1' component='h1' sx={{mb:2}}>Order: ABC123</Typography>
@@ -63,7 +66,7 @@ const OrderPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button color='secondary' className='circular-btn' fullWidth>
+                                <Button className='circular-btn' sx={{color: 'white', backgroundColor: palette.primary.main}} fullWidth>
                                     Pay
                                 </Button>
 
