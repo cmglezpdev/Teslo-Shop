@@ -22,6 +22,47 @@ yarn start # ejecuta el build de producción
 
 ## Documentación de la API
 
+### Datos de prueba
+
+```bash
+GET /api/seed
+```
+
+Este endpoint purga la base de datos y la llena con datos de prueba. Este endpoint no es accesible en entorno de producción
+
+### Obtener Productos
+
+* Todos los productos
+
+```bash
+GET /api/products
+```
+
+Este endpoint devuelve todos los productos de la base de datos
+
+* Por genero
+
+```bash
+GET /api/products?gender=men
+```
+
+También se puede buscar un producto por el género. Los generos admitidos son [`men`, `women`, `kid`, `unisex`, `all`]. Este ultimo hace lo mismo que si no le mandaras un parámetro
+
+* Por slug
+
+```bash
+GET /api/products/<slug>
+```
+Este endpoint devuelve el producto que tiene el slug especificado
+
+### Busqueda de Productos
+
+```bash
+GET /api/search/<query>
+```
+
+Este endpoint busca los productos que contengan en su `titulo` o en los `tags` el query especificado
+
 ## Developer
 
 Carlos Manuel González Peña - [twitter](https://twitter.com/cmglezp)
