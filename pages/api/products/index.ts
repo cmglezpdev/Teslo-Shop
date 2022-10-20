@@ -31,5 +31,5 @@ const getProducts = async (req:NextApiRequest, res:NextApiResponse) => {
                                   .select('title images price inStock slug -_id')
                                   .lean();
     await db.disconnect();
-    return res.status(200).json({ products })
+    return res.status(200).json( products )
 }
