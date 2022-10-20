@@ -32,7 +32,7 @@ Este endpoint purga la base de datos y la llena con datos de prueba. Este endpoi
 
 ### Obtener Productos
 
-* Todos los productos
+* __Todos los productos__
 
 ```bash
 GET /api/products
@@ -40,7 +40,7 @@ GET /api/products
 
 Este endpoint devuelve todos los productos de la base de datos
 
-* Por genero
+* __Por genero__
 
 ```bash
 GET /api/products?gender=men
@@ -48,17 +48,17 @@ GET /api/products?gender=men
 
 También se puede buscar un producto por el género. Los generos admitidos son [`men`, `women`, `kid`, `unisex`, `all`]. Este ultimo hace lo mismo que si no le mandaras un parámetro
 
-* Por slug
+* __Por slug__
 
 ```bash
-GET /api/products/<slug>
+GET /api/products/[slug]
 ```
 Este endpoint devuelve el producto que tiene el slug especificado
 
 ### Busqueda de Productos
 
 ```bash
-GET /api/search/<query>
+GET /api/search/[query]
 ```
 
 Este endpoint busca los productos que contengan en su `titulo` o en los `tags` el query especificado
