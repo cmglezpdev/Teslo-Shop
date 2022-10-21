@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next"
 import { Typography } from "@mui/material";
-import { useProducts } from "../hooks";
+import { useProducts } from "../../hooks";
 import { ShopLayout } from "../../layouts";
 import { FullScreenLoading } from "../../components/ui";
 import { ProductList } from '../../components/products';
