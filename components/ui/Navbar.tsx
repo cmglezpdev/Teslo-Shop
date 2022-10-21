@@ -1,10 +1,13 @@
+import { useContext } from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { AppBar, Badge, Box, Button, IconButton, Link, Toolbar, Typography } from "@mui/material"
 import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import { UIContext } from '../../context';
 
 export const Navbar = () => {
 
+    const { toggleSideMenu } = useContext(UIContext);
     const router = useRouter();
     const { gender } = router.query;
 
@@ -71,7 +74,11 @@ export const Navbar = () => {
                     </Link>
                 </NextLink>
 
-                <Button variant='text' sx={{ml: 2}}>
+                <Button 
+                    variant='text' 
+                    sx={{ml: 2}}
+                    onClick={() => toggleSideMenu()}
+                >
                     Menu
                 </Button>
 
