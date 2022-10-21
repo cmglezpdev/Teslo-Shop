@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useRouter } from 'next/router';
 import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 import { UIContext } from '../../context';
@@ -6,7 +7,14 @@ import { UIContext } from '../../context';
 
 export const SideMenu = () => {
 
+    const router = useRouter();
     const { toggleSideMenu, isMenuOpen } = useContext(UIContext);
+
+    const navigateTo = (address: string) => {
+        router.push(address)
+        toggleSideMenu();
+    }
+
 
     return (
         <Drawer
@@ -54,21 +62,30 @@ export const SideMenu = () => {
                         <ListItemIcon>
                             <MaleOutlined/>
                         </ListItemIcon>
-                        <ListItemText primary='Men' />
+                        <ListItemText
+                            primary='Men'
+                            onClick={() => navigateTo('/category/men')}
+                        />
                     </ListItem>
 
                     <ListItem button sx={{ display: { xs: '', sm: 'none' } }}>
                         <ListItemIcon>
                             <FemaleOutlined/>
                         </ListItemIcon>
-                        <ListItemText primary='Women' />
+                        <ListItemText
+                            primary='Women'
+                            onClick={() => navigateTo('/category/women')}
+                        />
                     </ListItem>
 
                     <ListItem button sx={{ display: { xs: '', sm: 'none' } }}>
                         <ListItemIcon>
                             <EscalatorWarningOutlined/>
                         </ListItemIcon>
-                        <ListItemText primary='Kids' />
+                        <ListItemText
+                            primary='Kids'
+                            onClick={() => navigateTo('/category/kid')}
+                        />
                     </ListItem>
 
 
