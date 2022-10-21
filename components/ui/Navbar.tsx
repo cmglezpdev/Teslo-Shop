@@ -1,8 +1,13 @@
 import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 import { AppBar, Badge, Box, Button, IconButton, Link, Toolbar, Typography } from "@mui/material"
 import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
 
 export const Navbar = () => {
+
+    const router = useRouter();
+    const { gender } = router.query;
+
     return (
         <AppBar>
             <Toolbar>
@@ -18,7 +23,10 @@ export const Navbar = () => {
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <NextLink href='/category/men'>
                         <Link>
-                            <Button variant='text'>
+                            <Button 
+                                color={gender === 'men' ? 'primary' : 'info'}
+                                sx={{ mr: 1 }}
+                            >
                                 Men
                             </Button>
                         </Link>
@@ -26,15 +34,21 @@ export const Navbar = () => {
                     
                     <NextLink href='/category/women'>
                         <Link>
-                            <Button variant='text'>
+                            <Button 
+                                color={gender === 'women' ? 'primary' : 'info'}
+                                sx={{ mr: 1 }}
+                            >
                                 Women
                             </Button>
                         </Link>
                     </NextLink>
                 
-                    <NextLink href='/category/kids'>
+                    <NextLink href='/category/kid'>
                         <Link>
-                            <Button variant='text'>
+                            <Button 
+                                color={gender === 'kid' ? 'primary' : 'info'}
+                                sx={{ mr: 1}}
+                            >
                                 Kids
                             </Button>
                         </Link>
