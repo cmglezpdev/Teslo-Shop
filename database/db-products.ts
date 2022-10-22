@@ -21,7 +21,7 @@ interface ProductSlug {
     slug: string;
 }
 
-export const getAllPorductsSlugs = async(): Promise<ProductSlug[]> => {
+export const getAllProductsSlugs = async(): Promise<ProductSlug[]> => {
     await db.connect();
     const slugs = await Product.find().select('slug -_id').lean();
     await db.disconnect();
@@ -42,4 +42,13 @@ export const getProductByTerm = async (term: string):Promise<IProduct[]> => {
     await db.disconnect();
 
     return products;
+}
+
+
+export const getAllProducts = async (): Promise<IProduct[]> => {
+    db.connect();
+    const products = await Product.find().lean();
+    db.disconnect();
+
+    return JSON.parse( JSON.stringify( products ) )
 }
