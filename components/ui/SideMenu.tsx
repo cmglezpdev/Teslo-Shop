@@ -35,6 +35,7 @@ export const SideMenu = () => {
 
                     <ListItem>
                         <Input
+                            autoFocus
                             type='text'
                             placeholder="Search..."
                             value={searchTerm}
