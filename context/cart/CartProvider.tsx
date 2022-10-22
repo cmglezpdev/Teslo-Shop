@@ -19,29 +19,33 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE)
 
     useEffect(() => {
-        Cookie.set('cart', JSON.stringify(state.cart));
-    }, [state.cart])
-
+        console.log('carge');
+        try {
+            const cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [];
+            dispatch({ type: '[Cart] Load Cart from cookies', payload: cart })
+        } catch (error) {
+            dispatch({ type: '[Cart] Load Cart from cookies', payload: [] })
+        }
+    }, [])
 
     const addProductToCart = (product: ICartProduct) => {
         
-        // if i have not a product equival to this, add like a new product
-        if( !state.cart.some(p => p._id === product._id && p.size === product.size) ) {
-            dispatch({ type: '[Cart] Add Product', payload: [product, ...state.cart] })
-            return;
-        }
+        const foundedProduct = state.cart.some(p => p._id === product._id && p.size === product.size);
 
-        // updated a last product with the new quantity
-        dispatch({
-            type: '[Cart] Add Product',
-            payload: state.cart.map(p => {
+        const cart = !foundedProduct
+            // if i have not a product equival to this, add like a new product
+            ? [product, ...state.cart]
+            // updated a last product with the new quantity
+            : state.cart.map(p => {
                 if( p._id !== product._id ) return p;
                 // TODO: Controlar que la cantidad no se mayor a la posible
                 // TODO: Manejar la cantidad total por tallas(habria que cambiar la base de datos)
                 return { ...p, quantity: p.quantity + product.quantity }
             })
-        })
 
+        dispatch({ type: '[Cart] Add Product', payload: cart })
+        console.log('guarde')
+        Cookie.set('cart', JSON.stringify(cart));
     }
 
     return (
