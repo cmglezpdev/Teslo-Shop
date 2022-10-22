@@ -22,6 +22,25 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const {} = useContext(AuthContext)
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE)
 
+    useEffect(() => {
+        checkToken()
+    }, [])
+
+    const checkToken = async () => {
+
+        try {
+            // the token is in the cookies
+            const { data }  = await tesloApi.get('/user/validate-token');
+            const { token, user } = data;
+            console.log(user)
+            Cookie.set('token', token);
+            dispatch({ type: '[Auth] Login', payload: user as IUser });
+            
+        } catch (error) {
+            // Cookie.remove('token')
+        }
+    }
+
     const loginUser = async( email:string, password: string ) => {
         try {
             const { data } = await tesloApi.post('/user/login', { email, password })

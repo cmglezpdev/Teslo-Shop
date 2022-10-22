@@ -5,6 +5,7 @@ import { AuthState } from "./"
 type ActionType = 
     | { type: '[Auth] Login', payload: IUser }
     | { type: '[Auth] Logout' }
+    | { type: '[Auth] Revalidate Sesion', payload: IUser }
 
 export const authReducer = (state: AuthState, action:ActionType) => {
     switch( action.type ) {
@@ -18,7 +19,7 @@ export const authReducer = (state: AuthState, action:ActionType) => {
         case '[Auth] Logout':
             return {
                 ...state,
-                isLoggoutIn: false,
+                isLoggedIn: false,
                 user: undefined
             }
 
