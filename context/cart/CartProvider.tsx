@@ -1,4 +1,5 @@
-import { FC, ReactNode, useContext, useReducer } from 'react';
+import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
+import Cookie from 'js-cookie'
 import { ICartProduct } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 
@@ -16,6 +17,11 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
     const {} = useContext(CartContext)
     const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE)
+
+    useEffect(() => {
+        Cookie.set('cart', JSON.stringify(state.cart));
+    }, [state.cart])
+
 
     const addProductToCart = (product: ICartProduct) => {
         
