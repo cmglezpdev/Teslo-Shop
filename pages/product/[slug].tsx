@@ -1,27 +1,26 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { GetStaticPaths, NextPage, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { Grid, Box, Typography, Button, Chip } from '@mui/material';
 import { ShopLayout } from '../../layouts';
 import { ProductSlideshow, ProductSizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 import { ICartProduct, IProduct, ISize } from '../../interfaces';
 import { dbProducts } from '../../database';
+import { CartContext } from '../../context';
 
 interface Props {
     product: IProduct;
 }
 
 const ProductPage:NextPage<Props> = ({ product }) => {
-    
+
+    const router = useRouter();
+    const { addProductToCart } = useContext(CartContext);
     const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
-        _id: product._id,
+        ...product,
         images: product.images[0],
-        inStock: product.inStock,
-        price: product.price,
         size: undefined,
-        slug: product.slug,
-        title: product.title,
-        gender: product.gender,
         quantity: 1
     })
 
@@ -36,6 +35,13 @@ const ProductPage:NextPage<Props> = ({ product }) => {
             quantity: newQuantity
         })
     }
+
+    const onAddToCart = () => {
+        if( !tempCartProduct.size ) return;
+        addProductToCart(tempCartProduct);
+        router.push('/cart');
+    }
+
 
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
@@ -70,6 +76,7 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                             color='secondary' 
                             className='circular-btn'
                             sx={{ display: product.inStock === 0 ? 'none' : 'flex' }}
+                            onClick={onAddToCart}
                         >
                             {
                                 tempCartProduct.size
