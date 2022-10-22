@@ -12,5 +12,13 @@ export interface ICartProduct {
     quantity: number;
 }
 
-
 // TODO: crear una jerarquia de interfaces para no copiar constantemente los campos
+
+
+export interface ICartSummary {
+    numberOfProducts: number;
+    subTotal: number;
+    taxRate: number;
+    tax: number;
+    totalCost: number;
+}
