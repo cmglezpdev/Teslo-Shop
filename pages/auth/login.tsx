@@ -6,11 +6,10 @@ import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form'
 import { AuthLayout } from '../../layouts';
 import { validations } from '../../utils';
-import { tesloApi } from '../../api';
 import { AuthContext } from '../../context';
 
 type FormData = {
-    email: string,
+    email:    string,
     password: string,
 }
 
@@ -29,9 +28,12 @@ const LoginPage = () => {
         if( !loggedUser ) {
             console.error('Error in the credentials')
             setShowError(true);
+
             setTimeout(() => {
                 setShowError(false)
             }, 3000);
+
+            return;
         }
         // TODO: navigate to the screen that the user was
         router.replace('/')
