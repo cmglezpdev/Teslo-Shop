@@ -30,6 +30,13 @@ const ProductPage:NextPage<Props> = ({ product }) => {
         setTempCartProduct(updCart)
     }
 
+    const updatedQuantity = (newQuantity: number) => {
+        setTempCartProduct({
+            ...tempCartProduct,
+            quantity: newQuantity
+        })
+    }
+
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
             <Grid container spacing={3}>
@@ -47,7 +54,11 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                     
                         <Box sx={{my: 2}}>
                             <Typography variant='subtitle1'>Total</Typography>
-                            <ItemCounter />
+                            <ItemCounter
+                                currentQuantity={tempCartProduct.quantity}
+                                updatedQuantity={updatedQuantity}
+                                maxQuantity={product.inStock}
+                            />
                             <ProductSizeSelector 
                                 selectedSize={ tempCartProduct.size }
                                 sizes={product.sizes}
