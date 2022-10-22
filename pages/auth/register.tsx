@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Grid, Link, TextField, Typography, Chip } from '@mui/material';
 import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
+import { AuthContext } from '../../context';
 import { AuthLayout } from '../../layouts';
-import { tesloApi } from '../../api';
 import { validations } from '../../utils';
 
 type FormData = {
@@ -13,29 +14,35 @@ type FormData = {
     password: string,
 }
 
+type TypeError = {
+    hasError: boolean,
+    message?: string | undefined
+}
+
 const RegisterPage = () => {
 
+    const router = useRouter();
+    const { registerUser } = useContext(AuthContext);
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
-    const [showError, setShowError] = useState(false);
+    const [error, setError] = useState<TypeError>({ hasError: false });
 
     const onRegisterUser = async ( { name, email, password }:FormData ) => {
-        setShowError(false);
-        try {
-            const { data } = await tesloApi.post('/user/register', { name, email, password })
-            const { token, user } = data;
-            console.log({token, user});
-            // TODO: save token in the cookie
 
-
-        } catch (error) {
-            console.error('Error in the credentials')
-            setShowError(true);
+        const response = await registerUser(name, email, password);
+        if( response.hasError ) {
+            console.error(response.message)
+            setError({
+                hasError: true,
+                message: response.message
+            })
             setTimeout(() => {
-                setShowError(false)
+                setError({ hasError: false })
             }, 3000);
+            return;
         }
 
         // TODO: navigate to the screen that the user was
+        router.replace('/')
     }
 
     return (
@@ -46,10 +53,11 @@ const RegisterPage = () => {
                         <Grid item xs={12} >
                             <Typography textAlign='center' variant='h1' component='h1'>Register in the store</Typography>
                             <Chip 
-                                label="Can not create this user"
+                                label={error.message}
+                                // label="Can not create this user"
                                 color='error'
                                 icon={<ErrorOutlined />}
-                                sx={{ mt:2, display: showError ? 'flex' : 'none' }}
+                                sx={{ mt:2, display: error.hasError ? 'flex' : 'none' }}
                                 className='fadeIn'
                             />
                         </Grid>

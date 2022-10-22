@@ -3,6 +3,7 @@ import Cookie from 'js-cookie'
 import { AuthContext, authReducer } from '.';
 import { IUser } from '../../interfaces';
 import { tesloApi } from '../../api';
+import axios from 'axios';
 
 
 export interface AuthState {
@@ -21,7 +22,7 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const {} = useContext(AuthContext)
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE)
 
-    const loginUser = async( email:string, password: string ):Promise<boolean> => {
+    const loginUser = async( email:string, password: string ) => {
         try {
             const { data } = await tesloApi.post('/user/login', { email, password })
             const { token, user } = data;
@@ -34,6 +35,28 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
             return false;
         }
     }
+    const registerUser = async( name:string, email:string, password: string ):Promise<{ hasError: boolean, message?: string}> => {
+        try {
+            const { data } = await tesloApi.post('/user/register', { name, email, password })
+            const { token, user } = data;
+
+            Cookie.set('token', token);
+            dispatch({ type: '[Auth] Login', payload: user })
+            return {
+                hasError: false,
+            };
+
+        } catch (error) {
+            return ( axios.isAxiosError(error) )
+                ? {
+                    hasError: true,
+                    message: error.response?.data.message
+                } : {
+                    hasError: true,
+                    message: 'Could not create the user | try again',
+                }
+        }
+    }
 
     return (
         <AuthContext.Provider value={{
@@ -41,6 +64,7 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
             // Methods
             loginUser,
+            registerUser,
         }}>
             { children }
         </AuthContext.Provider>
