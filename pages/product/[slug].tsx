@@ -1,15 +1,17 @@
+import { GetServerSideProps, GetStaticPaths, NextPage } from 'next';
 import { Grid, Box, Typography, Button, Chip } from '@mui/material';
 import { ShopLayout } from '../../layouts';
 
-import { initialData } from '../../database/products';
-import { ProductSlideshow } from '../../components/products';
+import { ProductSlideshow, ProductSizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
-import { ProductSizeSelector } from '../../components/products/ProductSizeSelector';
+import { IProduct } from '../../interfaces';
+import { dbProducts } from '../../database';
 
-const product = initialData.products[0];
+interface Props {
+    product: IProduct;
+}
 
-
-const ProductPage = () => {
+const ProductPage:NextPage<Props> = ({ product }) => {
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
             <Grid container spacing={3}>
@@ -54,3 +56,22 @@ const ProductPage = () => {
 }
 
 export default ProductPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+
+    const { slug } = params as { slug: string }
+    const product = await dbProducts.getProductBySlug( slug);
+
+    if( !product ) {
+        return {
+            notFound: true
+        }
+    }
+
+    return {
+        props: {
+            product
+        }
+    }
+
+}
