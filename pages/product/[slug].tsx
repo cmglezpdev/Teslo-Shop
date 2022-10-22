@@ -59,7 +59,7 @@ export default ProductPage;
 
 export const getStaticPaths:GetStaticPaths = async(context) => {
 
-    const slugs = await dbProducts.getAllPorductsSlugs();
+    const slugs = await dbProducts.getAllProductsSlugs();
     const paths = slugs.map(({ slug }) => ({
         params: { slug }
     }))
