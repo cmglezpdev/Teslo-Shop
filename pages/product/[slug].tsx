@@ -18,9 +18,14 @@ const ProductPage:NextPage<Props> = ({ product }) => {
     const router = useRouter();
     const { addProductToCart } = useContext(CartContext);
     const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
-        ...product,
-        images: product.images[0],
+        _id: product._id,
+        image: product.images[0],
+        inStock: product.inStock,
+        price: product.price,
         size: undefined,
+        slug: product.slug,
+        title: product.title,
+        gender: product.gender,
         quantity: 1
     })
 
