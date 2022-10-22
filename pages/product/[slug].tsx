@@ -1,7 +1,6 @@
-import { GetServerSideProps, GetStaticPaths, NextPage } from 'next';
+import { GetStaticPaths, NextPage, GetStaticProps } from 'next';
 import { Grid, Box, Typography, Button, Chip } from '@mui/material';
 import { ShopLayout } from '../../layouts';
-
 import { ProductSlideshow, ProductSizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 import { IProduct } from '../../interfaces';
@@ -12,6 +11,7 @@ interface Props {
 }
 
 const ProductPage:NextPage<Props> = ({ product }) => {
+    
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
             <Grid container spacing={3}>
@@ -28,7 +28,7 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                         <Typography variant='subtitle1' component='h2'>$2{product.price}</Typography>
                     
                         <Box sx={{my: 2}}>
-                            <Typography variant='subtitle2'>Total</Typography>
+                            <Typography variant='subtitle1'>Total</Typography>
                             <ItemCounter />
                             <ProductSizeSelector 
                                 selectedSize={ product.sizes[0] }
@@ -45,7 +45,7 @@ const ProductPage:NextPage<Props> = ({ product }) => {
 
                         {/* Description */}
                         <Box sx={{mt: 3}}>
-                            <Typography variant='subtitle2'>Description</Typography>
+                            <Typography variant='subtitle1'>Description</Typography>
                             <Typography variant='body2'>{product.description}</Typography>
                         </Box>
                     </Box>
@@ -57,10 +57,23 @@ const ProductPage:NextPage<Props> = ({ product }) => {
 
 export default ProductPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticPaths:GetStaticPaths = async(context) => {
 
-    const { slug } = params as { slug: string }
-    const product = await dbProducts.getProductBySlug( slug);
+    const slugs = await dbProducts.getAllPorductsSlugs();
+    const paths = slugs.map(({ slug }) => ({
+        params: { slug }
+    }))
+
+    return {
+        paths,
+        fallback: 'blocking'
+    }
+}
+
+export const getStaticProps:GetStaticProps = async ({ params }) => {
+
+    const { slug } = params as { slug:string };
+    const product = await dbProducts.getProductBySlug(slug);
 
     if( !product ) {
         return {
@@ -71,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     return {
         props: {
             product
-        }
+        },
+        revalidate: 86400
     }
-
 }
