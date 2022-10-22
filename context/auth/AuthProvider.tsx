@@ -37,7 +37,7 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
             dispatch({ type: '[Auth] Login', payload: user as IUser });
             
         } catch (error) {
-            // Cookie.remove('token')
+            Cookie.remove('token')
         }
     }
 
