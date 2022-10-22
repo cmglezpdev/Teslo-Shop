@@ -28,6 +28,12 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
         }
     }, [])
 
+    // TODO: Arreglar el error de cuando recargo el navegador este me borra las cookies
+    useEffect(() => {
+        Cookie.set('cart', JSON.stringify(state.cart));
+    }, [state.cart])
+
+
     const addProductToCart = (product: ICartProduct) => {
         
         const foundedProduct = state.cart.some(p => p._id === product._id && p.size === product.size);
@@ -44,14 +50,19 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
             })
 
         dispatch({ type: '[Cart] Add Product', payload: cart })
-        console.log('guarde')
-        Cookie.set('cart', JSON.stringify(cart));
+        // console.log('guarde')
+        // Cookie.set('cart', JSON.stringify(cart));
+    }
+
+    const updateCartQuantity = (product: ICartProduct) => {
+        dispatch({ type: '[Cart] Change Quantity', payload: product })
     }
 
     return (
         <CartContext.Provider value={{
             ...state,
             addProductToCart,
+            updateCartQuantity
         }}>
             { children }
         </CartContext.Provider>
