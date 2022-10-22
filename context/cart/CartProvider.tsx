@@ -2,6 +2,7 @@ import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie'
 import { ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
+import { utilsProduct } from '../../utils';
 
 
 export interface CartState {
@@ -61,7 +62,7 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
     const addProductToCart = (product: ICartProduct) => {
         
-        const foundedProduct = state.cart.some(p => p._id === product._id && p.size === product.size);
+        const foundedProduct = state.cart.some(p => utilsProduct.some(p, product, '_id size'));
 
         const cart = !foundedProduct
             // if i have not a product equival to this, add like a new product

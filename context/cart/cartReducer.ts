@@ -1,5 +1,6 @@
 import { ICartProduct, ICartSummary } from '../../interfaces';
 import { CartState } from './';
+import { utilsProduct } from '../../utils';
 
 
 type ActionType = 
@@ -27,8 +28,7 @@ export const cartReducer = (state: CartState, action:ActionType) => {
             return {
                 ...state,
                 cart: state.cart.map(product => {
-                    if( product._id !== action.payload._id ) return product;
-                    if( product.size !== action.payload.size ) return product;
+                    if( !utilsProduct.some(product, action.payload, '_id size') ) return product
                     return {
                         ...product,
                         quantity: action.payload.quantity
@@ -39,7 +39,7 @@ export const cartReducer = (state: CartState, action:ActionType) => {
         case '[Cart] Remove Product':
             return {
                 ...state,
-                cart: state.cart.filter(product => !(product._id === action.payload._id && product.size === action.payload.size))
+                cart: state.cart.filter(product => !utilsProduct.some(product, action.payload, '_id size'))
             }
 
         case '[Cart] Update Cart Summary':
