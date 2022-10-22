@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { GetStaticPaths, NextPage, GetStaticProps } from 'next';
 import { Grid, Box, Typography, Button, Chip } from '@mui/material';
 import { ShopLayout } from '../../layouts';
 import { ProductSlideshow, ProductSizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
-import { IProduct } from '../../interfaces';
+import { ICartProduct, IProduct, ISize } from '../../interfaces';
 import { dbProducts } from '../../database';
 
 interface Props {
@@ -12,6 +13,23 @@ interface Props {
 
 const ProductPage:NextPage<Props> = ({ product }) => {
     
+    const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+        _id: product._id,
+        images: product.images[0],
+        inStock: product.inStock,
+        price: product.price,
+        size: undefined,
+        slug: product.slug,
+        title: product.title,
+        gender: product.gender,
+        quantity: 1
+    })
+
+    const onSelectedSize = (size: ISize) => {
+        const updCart = { ...tempCartProduct, size };
+        setTempCartProduct(updCart)
+    }
+
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
             <Grid container spacing={3}>
@@ -31,8 +49,9 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                             <Typography variant='subtitle1'>Total</Typography>
                             <ItemCounter />
                             <ProductSizeSelector 
-                                selectedSize={ product.sizes[0] }
+                                selectedSize={ tempCartProduct.size }
                                 sizes={product.sizes}
+                                onSelectedSize={onSelectedSize}
                             />
                         </Box>
 
@@ -40,8 +59,12 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                             color='secondary' 
                             className='circular-btn'
                             sx={{ display: product.inStock === 0 ? 'none' : 'flex' }}
-                            >
-                            Add to Cart
+                        >
+                            {
+                                tempCartProduct.size
+                                    ? 'Add to Cart'
+                                    : 'Select a size'    
+                            }
                         </Button>
 
                         <Chip 
