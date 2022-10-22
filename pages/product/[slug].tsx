@@ -36,12 +36,20 @@ const ProductPage:NextPage<Props> = ({ product }) => {
                             />
                         </Box>
 
-                        {/* Add to Cart */}
-                        <Button color='secondary' className='circular-btn'>
+                        <Button 
+                            color='secondary' 
+                            className='circular-btn'
+                            sx={{ display: product.inStock === 0 ? 'none' : 'flex' }}
+                            >
                             Add to Cart
                         </Button>
 
-                        {/* <Chip label='Not available' color='error' variant='outlined' /> */}
+                        <Chip 
+                            label='Out of Stock' 
+                            color='error' 
+                            variant='outlined' 
+                            sx={{ display: product.inStock === 0 ? 'flex' : 'none' }}
+                        />
 
                         {/* Description */}
                         <Box sx={{mt: 3}}>
