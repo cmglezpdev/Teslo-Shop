@@ -1,16 +1,24 @@
 import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie'
-import { ICartProduct } from '../../interfaces';
+import { ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 
 
 export interface CartState {
     cart: ICartProduct[];
+    summary: ICartSummary;
 }
 
 
 const INITIAL_STATE:CartState = {
-    cart: []
+    cart: [],
+    summary: {
+        numberOfProducts: 0,
+        subTotal: 0,
+        tax: 0,
+        taxRate: 0,
+        totalCost: 0
+    }
 }
 
 export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
@@ -31,6 +39,23 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
     // TODO: Arreglar el error de cuando recargo el navegador este me borra las cookies
     useEffect(() => {
         Cookie.set('cart', JSON.stringify(state.cart));
+    }, [state.cart])
+
+    useEffect(() => {
+
+        const numberOfProducts = state.cart.reduce((prev, current) => current.quantity + prev, 0);
+        const subTotal = state.cart.reduce((prev, current) => current.price + prev, 0);
+        const taxRate = 0.15; //TODO: obtener el tax desde el servidor(poder seleccionarlo desde el panel administrativo para cada producto)
+        const tax = subTotal * taxRate;
+        const totalCost = subTotal - tax;
+        const summary: ICartSummary = {
+            numberOfProducts,
+            subTotal,
+            taxRate,
+            tax,
+            totalCost,
+        }
+        dispatch({ type: '[Cart] Update Cart Summary', payload: summary })
     }, [state.cart])
 
 

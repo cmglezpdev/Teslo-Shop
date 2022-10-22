@@ -1,4 +1,4 @@
-import { ICartProduct } from '../../interfaces';
+import { ICartProduct, ICartSummary } from '../../interfaces';
 import { CartState } from './';
 
 
@@ -7,6 +7,7 @@ type ActionType =
     | { type: '[Cart] Add Product', payload: ICartProduct[] }
     | { type: '[Cart] Remove Product', payload: ICartProduct }
     | { type: '[Cart] Change Quantity', payload: ICartProduct }
+    | { type: '[Cart] Update Cart Summary', payload: ICartSummary }
 
 export const cartReducer = (state: CartState, action:ActionType) => {
     switch( action.type ) {
@@ -39,6 +40,12 @@ export const cartReducer = (state: CartState, action:ActionType) => {
             return {
                 ...state,
                 cart: state.cart.filter(product => !(product._id === action.payload._id && product.size === action.payload.size))
+            }
+
+        case '[Cart] Update Cart Summary':
+            return {
+                ...state,
+                summary: action.payload
             }
 
         default:
