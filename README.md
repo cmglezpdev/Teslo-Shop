@@ -1,6 +1,7 @@
 # Teslo Shop | Una tienda en linea de ropa
 > Este proyecto está inspirado en la tienda de Testa shop.tesla.com. Fue creado con el objetivo de aprender Next JS y para crear mi primer ecommerce
 
+<hr />
 
 ## Commands
 
@@ -9,7 +10,7 @@ Para poder correr el proyecto en local se debe ejecutar los siguientes commandos
 ```bash
 docker-compose up -d
 
-yarn dev # or npm run dev
+yarn dev # ejecuta la aplicacion en desarrollo
 ```
 Este levanta la imagen de docker de la base de datos y posteriormente levantar la aplicación en modo desarrollo.
 
@@ -19,6 +20,15 @@ Este levanta la imagen de docker de la base de datos y posteriormente levantar l
 yarn build # crea el build de producción de la aplicación
 yarn start # ejecuta el build de producción
 ```
+
+### Variables de entorno
+
+Renombrar el archivo __.env.template__ a __.env__ y asignarle los valores a las variables de entorno
+
+- __MONGO_URL__: La url de la base de datos de mongo. Si es en desarrollo usamos _mongodb://localhost:27017/teslodb_.
+- __JWT_SECREET_SEED__: Una frase secreta para la creación y validación de los Json Web Tokens.
+
+<hr />
 
 ## Documentación de la API
 
@@ -32,28 +42,32 @@ Este endpoint purga la base de datos y la llena con datos de prueba. Este endpoi
 
 ### Obtener Productos
 
-* __Todos los productos__
+#### Todos los productos
 
 ```bash
 GET /api/products
 ```
 
-Este endpoint devuelve todos los productos de la base de datos
+Devuelve todos los productos de la base de datos
 
-* __Por genero__
+#### Por genero
 
 ```bash
 GET /api/products?gender=men
 ```
 
-También se puede buscar un producto por el género. Los generos admitidos son [`men`, `women`, `kid`, `unisex`, `all`]. Este ultimo hace lo mismo que si no le mandaras un parámetro
+Buscar productos por un género.
 
-* __Por slug__
+- __Params__
+    * gender: `men` | `women` | `kid` | `unisex` | `all`
+
+
+#### Por slug
 
 ```bash
 GET /api/products/[slug]
 ```
-Este endpoint devuelve el producto que tiene el slug especificado
+Devuelve el producto que tiene el slug especificado
 
 ### Busqueda de Productos
 
@@ -61,8 +75,46 @@ Este endpoint devuelve el producto que tiene el slug especificado
 GET /api/search/[query]
 ```
 
-Este endpoint busca los productos que contengan en su `titulo` o en los `tags` el query especificado
+Busca los productos que contengan en su `titulo` o en los `tags` el `query` especificado
+
+### Manejo de usuarios
+
+#### Login 
+
+```bash
+POST /api/user/login
+```
+
+* __Body__
+    * __email__: El email del usuario
+    * __password__: El password del usuario
+
+Realiza el login del usuario especificado
+
+#### Register
+
+```bash
+POST /api/user/register
+```
+
+* __Body__
+    * __name__: El nombre del usuario
+    * __email__: El email del usuario
+    * __password__: El password del usuario
+
+Realiza el registro y login del usuario especificado
+
+#### Validación de tokens
+
+```bash
+GET /api/user/validate-token
+```
+
+
+Valida el token que está en las `cookies` y crea uno nuevo
+
+<hr />
 
 ## Developer
 
-Carlos Manuel González Peña - [twitter](https://twitter.com/cmglezp)
+__Carlos Manuel González Peña__ - [_twitter_](https://twitter.com/cmglezp)
