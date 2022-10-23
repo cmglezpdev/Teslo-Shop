@@ -6,12 +6,14 @@ import { utilsProduct } from '../../utils';
 
 
 export interface CartState {
+    isLoaded: boolean;
     cart: ICartProduct[];
     summary: ICartSummary;
 }
 
 
 const INITIAL_STATE:CartState = {
+    isLoaded: false,
     cart: [],
     summary: {
         numberOfProducts: 0,
