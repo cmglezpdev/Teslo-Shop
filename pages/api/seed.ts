@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedDatabase } from '../../database';
-import { Product, User } from '../../models';
+import { Country, Product, User } from '../../models';
 
 type Data = {
   message: string
@@ -13,10 +13,15 @@ export default async function InsertSeedDatabase( req: NextApiRequest, res: Next
   
   try {
     await db.connect();
+    
     await Product.deleteMany();
     await User.deleteMany();
-    await Product.insertMany(seedDatabase.initialData.products);
-    await User.insertMany(seedDatabase.initialData.users);
+    await Country.deleteMany();
+
+    await Product.insertMany(seedDatabase.products);
+    await User.insertMany(seedDatabase.users);
+    await Country.insertMany(seedDatabase.countries)
+    
     await db.disconnect();
 
     return res.status(200).json({ message: 'The database if fulled with data test' })
