@@ -28,6 +28,8 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
     const checkToken = async () => {
 
+        if( !Cookie.get('token') ) return;
+
         try {
             // the token is in the cookies
             const { data }  = await tesloApi.get('/user/validate-token');

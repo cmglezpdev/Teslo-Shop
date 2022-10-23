@@ -43,7 +43,7 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
     }, [state.cart])
 
     useEffect(() => {
-
+ 
         const numberOfProducts = state.cart.reduce((prev, current) => current.quantity + prev, 0);
         const subTotal = state.cart.reduce((prev, current) => current.price * current.quantity + prev, 0);
         const taxRate = 0.15; //TODO: obtener el tax desde el servidor(poder seleccionarlo desde el panel administrativo para cada producto)
