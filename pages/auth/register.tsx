@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Grid, Link, TextField, Typography, Chip } from '@mui/material';
@@ -25,6 +25,7 @@ const RegisterPage = () => {
     const { registerUser } = useContext(AuthContext);
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
     const [error, setError] = useState<TypeError>({ hasError: false });
+    const lastPageBeforeLogin = useMemo(() => router.query.p?.toString(), [router.query] );
 
     const onRegisterUser = async ( { name, email, password }:FormData ) => {
 
@@ -41,8 +42,8 @@ const RegisterPage = () => {
             return;
         }
 
-        // TODO: navigate to the screen that the user was
-        router.replace('/')
+        const destination = lastPageBeforeLogin || '/';
+        router.replace( destination )
     }
 
     return (
@@ -118,7 +119,10 @@ const RegisterPage = () => {
                         </Grid>
                         
                         <Grid item xs={12} display='flex' justifyContent='end'>
-                            <NextLink href='/auth/login' passHref>
+                            <NextLink 
+                                href={`/auth/login${ lastPageBeforeLogin ? `?p=${lastPageBeforeLogin}` : '' }`} 
+                                passHref
+                            >
                                 <Link underline='always'>
                                     {`Do you have an account?`}
                                 </Link>

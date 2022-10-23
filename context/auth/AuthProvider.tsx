@@ -1,9 +1,10 @@
-import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
+import { FC, ReactNode, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie'
+import axios from 'axios';
 import { AuthContext, authReducer } from '.';
 import { IUser } from '../../interfaces';
 import { tesloApi } from '../../api';
-import axios from 'axios';
 
 
 export interface AuthState {
@@ -19,7 +20,7 @@ const INITIAL_STATE:AuthState = {
 
 export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
-    const {} = useContext(AuthContext)
+    const router = useRouter();
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE)
 
     useEffect(() => {
@@ -78,6 +79,12 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
                 }
         }
     }
+    const logoutUser = () => {
+        Cookie.remove('token');
+        Cookie.remove('cart');
+        // the AuthContext and CartContext delete automatly them states
+        router.reload();
+    }
 
     return (
         <AuthContext.Provider value={{
@@ -86,6 +93,7 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
             // Methods
             loginUser,
             registerUser,
+            logoutUser
         }}>
             { children }
         </AuthContext.Provider>

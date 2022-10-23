@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
@@ -19,6 +19,7 @@ const LoginPage = () => {
     const { loginUser } = useContext(AuthContext);
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false);
+    const lastPageBeforeLogin = useMemo(() => router.query.p?.toString(), [router.query] );
 
     const onLoginUser = async ( { email, password }:FormData ) => {
         setShowError(false);
@@ -35,8 +36,9 @@ const LoginPage = () => {
 
             return;
         }
-        // TODO: navigate to the screen that the user was
-        router.replace('/')
+        
+        const destination = lastPageBeforeLogin || '/';
+        router.replace(destination)
     }
 
     return (
@@ -98,7 +100,10 @@ const LoginPage = () => {
                         </Grid>
                         
                         <Grid item xs={12} display='flex' justifyContent='end'>
-                            <NextLink href='/auth/register' passHref>
+                            <NextLink 
+                                href={`/auth/register${lastPageBeforeLogin ? `?p=${lastPageBeforeLogin}` : ''}`} 
+                                passHref
+                            >
                                 <Link underline='always'>
                                     {`Don't you have an account?`}
                                 </Link>
