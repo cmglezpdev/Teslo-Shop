@@ -5,7 +5,7 @@ import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/mater
 import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form'
 import { AuthLayout } from '../../layouts';
-import { validations } from '../../utils';
+import { validations } from '../../services';
 import { AuthContext } from '../../context';
 
 type FormData = {

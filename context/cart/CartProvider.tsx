@@ -2,7 +2,7 @@ import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie'
 import { ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
-import { utilsProduct } from '../../utils';
+import { utilsProduct } from '../../services';
 
 
 export interface CartState {

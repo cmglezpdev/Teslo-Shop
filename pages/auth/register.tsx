@@ -6,7 +6,7 @@ import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../../context';
 import { AuthLayout } from '../../layouts';
-import { validations } from '../../utils';
+import { validations } from '../../services';
 
 type FormData = {
     name:     string,

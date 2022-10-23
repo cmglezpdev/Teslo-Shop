@@ -1,6 +1,6 @@
 import { ICartProduct, ICartSummary } from '../../interfaces';
 import { CartState } from './';
-import { utilsProduct } from '../../utils';
+import { utilsProduct } from '../../services';
 
 
 type ActionType = 
