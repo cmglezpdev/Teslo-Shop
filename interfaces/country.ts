@@ -1,19 +1,19 @@
 
 export interface IRegion {
-    _id: string;
+    _id:  string;
     name: string;
     code: string;
 }
 
 export interface ICountry {
-    _id: string;
-    name: string,
-    code: string,
+    _id:     string;
+    name:    string,
+    code:    string,
     capital: string,
-    region: string,
+    region:  string,
     currency: {
-        code: string,
-        name: string,
+        code:   string,
+        name:   string,
         symbol: string | null,
     },
     language: {

@@ -1,15 +1,16 @@
 export interface IProduct {
-    _id: number;
+    _id:         number;
     description: string;
-    images: string[];
-    inStock: number;
-    price: number;
-    sizes: ISize[];
-    slug: string;
-    tags: string[];
-    title: string;
-    type: IType;
-    gender: 'men'|'women'|'kid'|'unisex';
+    images:      string[];
+    inStock:     number;
+    price:       number;
+    sizes:       ISize[];
+    slug:        string;
+    tags:        string[];
+    title:       string;
+    type:        IType;
+    gender:      'men'|'women'|'kid'|'unisex';
+    
     createdAt: string;
     updatedAt: string;
 }

@@ -5,13 +5,13 @@ export interface SeedRegion {
 }
 
 export interface SeedCountry {
-    name: string,
-    code: string,
+    name:    string,
+    code:    string,
     capital: string,
-    region: string,
+    region:  string,
     currency: {
-        code: string,
-        name: string,
+        code:   string,
+        name:   string,
         symbol: string | null,
     },
     language: {
