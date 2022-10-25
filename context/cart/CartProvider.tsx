@@ -1,4 +1,4 @@
-import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
+import { FC, ReactNode, useContext, useEffect, useReducer, useState } from 'react';
 import Cookie from 'js-cookie'
 import { ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
@@ -26,26 +26,23 @@ const INITIAL_STATE:CartState = {
 
 export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
-    const {} = useContext(CartContext)
     const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE)
+    const [fristLoad, setFristLoad] = useState(true);
 
     useEffect(() => {
-        console.log('carge');
-        try {
-            const cart = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [];
-            dispatch({ type: '[Cart] Load Cart from cookies', payload: cart })
-        } catch (error) {
-            dispatch({ type: '[Cart] Load Cart from cookies', payload: [] })
-        }
+        const cart = JSON.parse(Cookie.get('cart') || '[]');
+        dispatch({ type: '[Cart] Load Cart from cookies', payload: cart })
     }, [])
 
-    // TODO: Arreglar el error de cuando recargo el navegador este me borra las cookies
     useEffect(() => {
+        if( fristLoad ) {
+            setFristLoad(false);
+            return;
+        }
         Cookie.set('cart', JSON.stringify(state.cart));
-    }, [state.cart])
+    }, [state.cart, fristLoad])
 
     useEffect(() => {
- 
         const numberOfProducts = state.cart.reduce((prev, current) => current.quantity + prev, 0);
         const subTotal = state.cart.reduce((prev, current) => current.price * current.quantity + prev, 0);
         const taxRate = 0.15; //TODO: obtener el tax desde el servidor(poder seleccionarlo desde el panel administrativo para cada producto)
