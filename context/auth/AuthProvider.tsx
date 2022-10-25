@@ -35,7 +35,6 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
             // the token is in the cookies
             const { data }  = await tesloApi.get('/user/validate-token');
             const { token, user } = data;
-            console.log(user)
             Cookie.set('token', token);
             dispatch({ type: '[Auth] Login', payload: user as IUser });
             
