@@ -1,6 +1,6 @@
 import { FC, ReactNode, useContext, useEffect, useReducer, useState } from 'react';
-import Cookie from 'js-cookie'
-import { ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
+import Cookies from 'js-cookie'
+import { IAddress, ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 import { utilsProduct } from '../../services';
 
@@ -9,6 +9,7 @@ export interface CartState {
     isLoaded: boolean;
     cart: ICartProduct[];
     summary: ICartSummary;
+    shippingAddress?: IAddress;
 }
 
 
@@ -21,7 +22,8 @@ const INITIAL_STATE:CartState = {
         tax: 0,
         taxRate: 0,
         totalCost: 0
-    }
+    },
+    shippingAddress: undefined
 }
 
 export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
@@ -30,7 +32,7 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const [fristLoad, setFristLoad] = useState(true);
 
     useEffect(() => {
-        const cart = JSON.parse(Cookie.get('cart') || '[]');
+        const cart = JSON.parse(Cookies.get('cart') || '[]');
         dispatch({ type: '[Cart] Load Cart from cookies', payload: cart })
     }, [])
 
@@ -39,8 +41,23 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
             setFristLoad(false);
             return;
         }
-        Cookie.set('cart', JSON.stringify(state.cart));
+        Cookies.set('cart', JSON.stringify(state.cart));
     }, [state.cart, fristLoad])
+
+    useEffect(() => {
+        const defaultAddress:IAddress = {
+            name: '',
+            lastName: '',
+            address: '',
+            address_2: '',
+            zip: '',
+            country: 'US',
+            city: '',
+            phone: '',
+        }
+        const address = JSON.parse(Cookies.get('address') || JSON.stringify(defaultAddress));
+        dispatch({ type: '[Cart] Load Address from Cookies', payload: address })
+    }, [])
 
     useEffect(() => {
         const numberOfProducts = state.cart.reduce((prev, current) => current.quantity + prev, 0);
@@ -76,7 +93,7 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
         dispatch({ type: '[Cart] Add Product', payload: cart })
         // console.log('guarde')
-        // Cookie.set('cart', JSON.stringify(cart));
+        // Cookies.set('cart', JSON.stringify(cart));
     }
 
     const updateCartQuantity = (product: ICartProduct) => {
@@ -87,12 +104,18 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
         dispatch({ type: '[Cart] Remove Product', payload: product })
     }
 
+    const updateAddress = ( address: IAddress ) => {
+        Cookies.set('address', JSON.stringify( address ))
+        dispatch({ type: '[Cart] Updated Address', payload: address })
+    }
+
     return (
         <CartContext.Provider value={{
             ...state,
             addProductToCart,
             updateCartQuantity,
-            removeProductCart
+            removeProductCart,
+            updateAddress
         }}>
             { children }
         </CartContext.Provider>
