@@ -6,12 +6,12 @@ interface ContextProps {
     cart: ICartProduct[];
     summary: ICartSummary;
     shippingAddress?: IAddress;
-
+    
     // Methods
     addProductToCart: (product: ICartProduct) => void;
     updateCartQuantity: (product: ICartProduct) => void;
     removeProductCart: (product: ICartProduct) => void;
-    updateAddress: (address: IAddress) => void
+    updateAddress: (address: IAddress) => void;
 }
 
 

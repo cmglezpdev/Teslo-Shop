@@ -1,9 +1,8 @@
-import { FC, ReactNode, useContext, useEffect, useReducer, useState } from 'react';
+import { FC, ReactNode, useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie'
 import { IAddress, ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 import { utilsProduct } from '../../services';
-
 
 export interface CartState {
     isLoaded: boolean;
@@ -29,36 +28,41 @@ const INITIAL_STATE:CartState = {
 export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
     const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE)
-    const [fristLoad, setFristLoad] = useState(true);
+    const [firstLoad, setFirstLoad] = useState(true);
 
+    // Load cart from cookies
     useEffect(() => {
         const cart = JSON.parse(Cookies.get('cart') || '[]');
         dispatch({ type: '[Cart] Load Cart from cookies', payload: cart })
     }, [])
 
+    // Save cart in cookies when change the state
     useEffect(() => {
-        if( fristLoad ) {
-            setFristLoad(false);
+        if( firstLoad ) {
+            setFirstLoad(false);
             return;
         }
         Cookies.set('cart', JSON.stringify(state.cart));
-    }, [state.cart, fristLoad])
+    }, [state.cart, firstLoad])
 
+    // load address from cookies
     useEffect(() => {
-        const defaultAddress:IAddress = {
-            name: '',
-            lastName: '',
-            address: '',
-            address_2: '',
-            zip: '',
-            country: 'US',
-            city: '',
-            phone: '',
+        if( !Cookies.get('name') ) return;
+
+        const address = {
+            name      : Cookies.get('name')      || '',
+            lastName  : Cookies.get('lastName')  || '',
+            address   : Cookies.get('address')   || '',
+            address_2 : Cookies.get('address_2') || '',
+            zip       : Cookies.get('zip')       || '',
+            country   : Cookies.get('country')   || '',
+            city      : Cookies.get('city')      || '',
+            phone     : Cookies.get('phone')     || '',
         }
-        const address = JSON.parse(Cookies.get('address') || JSON.stringify(defaultAddress));
         dispatch({ type: '[Cart] Load Address from Cookies', payload: address })
     }, [])
 
+    // recalculation of summary with each change of the state
     useEffect(() => {
         const numberOfProducts = state.cart.reduce((prev, current) => current.quantity + prev, 0);
         const subTotal = state.cart.reduce((prev, current) => current.price * current.quantity + prev, 0);
@@ -81,13 +85,13 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
         const foundedProduct = state.cart.some(p => utilsProduct.some(p, product, '_id size'));
 
         const cart = !foundedProduct
-            // if i have not a product equival to this, add like a new product
+            // if i have not a product equivale to this, add like a new product
             ? [product, ...state.cart]
             // updated a last product with the new quantity
             : state.cart.map(p => {
                 if( p._id !== product._id ) return p;
                 // TODO: Controlar que la cantidad no se mayor a la posible
-                // TODO: Manejar la cantidad total por tallas(habria que cambiar la base de datos)
+                // TODO: Manejar la cantidad total por tallas(habría que cambiar la base de datos)
                 return { ...p, quantity: p.quantity + product.quantity }
             })
 
@@ -105,7 +109,15 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     const updateAddress = ( address: IAddress ) => {
-        Cookies.set('address', JSON.stringify( address ))
+        Cookies.set('name',      address.name )
+        Cookies.set('lastName',  address.lastName )
+        Cookies.set('address',   address.address )
+        Cookies.set('address_2', address.address_2 || '' )
+        Cookies.set('city',      address.city )
+        Cookies.set('country',   address.country )
+        Cookies.set('zip',       address.zip )
+        Cookies.set('phone',     address.phone )
+        
         dispatch({ type: '[Cart] Updated Address', payload: address })
     }
 

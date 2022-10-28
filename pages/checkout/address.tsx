@@ -1,32 +1,27 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Typography, Grid, TextField, FormControl, MenuItem, Box, Button } from '@mui/material';
 import { useForm } from 'react-hook-form'
 import Cookies from 'js-cookie';
-import { ShopLayout } from "../../layouts"
+import { ShopLayout } from '../../layouts'
 import { countries } from '../../database/data/countries'
 import { IAddress } from '../../interfaces';
 import { CartContext } from '../../context';
 
 const getAddressFromCookie = ():IAddress => {
-    const defaultState:IAddress = {
-        name: '',
-        lastName: '',
-        address: '',
-        address_2: '',
-        zip: '',
-        country: 'US',
-        city: '',
-        phone: '',
+    const state:IAddress = {
+        name      : Cookies.get('name')      || '',
+        lastName  : Cookies.get('lastName')  || '',
+        address   : Cookies.get('address')   || '',
+        address_2 : Cookies.get('address_2') || '',
+        zip       : Cookies.get('zip')       || '',
+        country   : Cookies.get('country')   || '',
+        city      : Cookies.get('city')      || '',
+        phone     : Cookies.get('phone')     || '',
     }
 
-    const addressInCookies = JSON.parse(Cookies.get('address') || '{}');
-    return {
-        ...defaultState,
-        ...addressInCookies
-    }
+    return state;
 }
-
 
 const AddressPage = () => {
 
@@ -127,7 +122,9 @@ const AddressPage = () => {
                                 select 
                                 variant='outlined'
                                 label='Country'
-                                defaultValue='US'
+                                // TODO: FIX default value
+                                // defaultValue={ Cookies.get('country') || '' }
+                                defaultValue={''}
                                 {...register('country', {
                                     required: 'The country is required',
                                 })}
@@ -135,8 +132,8 @@ const AddressPage = () => {
                                 helperText={ errors.country?.message }  
                             >
                                 {
-                                    countries.map(({ code, name }) => (
-                                        <MenuItem value={code} key={code}>
+                                    [{code: '', name: '' }, ...countries].map(({ code, name }) => (
+                                        <MenuItem value={code} key={code} >
                                             <Typography fontWeight='400'>{ name }</Typography>
                                         </MenuItem>
                                     ))
@@ -144,7 +141,7 @@ const AddressPage = () => {
                             </TextField>
                         </FormControl>
                     </Grid>
-                    {/* TODO: Agregar un listado lateral con el codigo de numero */}
+                    {/* TODO: Agregar un listado lateral con el código de número */}
                     <Grid item xs={12} sm={6}>
                         <TextField
                             label='Phone' 
