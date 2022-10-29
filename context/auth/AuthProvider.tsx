@@ -81,7 +81,16 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const logoutUser = () => {
         Cookie.remove('token');
         Cookie.remove('cart');
-        // the AuthContext and CartContext delete automatly them states
+        Cookie.remove('name')
+        Cookie.remove('lastName')
+        Cookie.remove('address')
+        Cookie.remove('address_2')
+        Cookie.remove('city')
+        Cookie.remove('country')
+        Cookie.remove('zip')
+        Cookie.remove('phone')
+        
+        // the AuthContext and CartContext delete automatically them states
         router.reload();
     }
 
