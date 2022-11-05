@@ -26,8 +26,10 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE)
 
     useEffect(() => {
-        if( status  == 'authenticated' )
+        if( status  == 'authenticated' ) {
             dispatch({type: '[Auth] Login', payload: data?.user as IUser}) 
+            console.log(data.user)
+        }
     }, [ status, data ])
 
 
