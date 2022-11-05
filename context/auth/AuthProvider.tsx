@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect, useReducer } from 'react';
+import { useSession } from 'next-auth/react';
 import Cookie from 'js-cookie'
 import axios from 'axios';
 import { AuthContext, authReducer } from '.';
@@ -21,11 +22,18 @@ const INITIAL_STATE:AuthState = {
 export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
 
     const router = useRouter();
+    const { data, status } = useSession();
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE)
 
     useEffect(() => {
-        checkToken()
-    }, [])
+        if( status  == 'authenticated' )
+            dispatch({type: '[Auth] Login', payload: data?.user as IUser}) 
+    }, [ status, data ])
+
+
+    // useEffect(() => {
+    //     checkToken()
+    // }, [])
 
     const checkToken = async () => {
 
