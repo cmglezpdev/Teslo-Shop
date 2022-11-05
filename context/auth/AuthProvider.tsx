@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect, useReducer } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Cookie from 'js-cookie'
 import axios from 'axios';
 import { AuthContext, authReducer } from '.';
@@ -89,7 +89,6 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
         }
     }
     const logoutUser = () => {
-        Cookie.remove('token');
         Cookie.remove('cart');
         Cookie.remove('name')
         Cookie.remove('lastName')
@@ -99,9 +98,10 @@ export const AuthProvider:FC<{ children: ReactNode }> = ({ children }) => {
         Cookie.remove('country')
         Cookie.remove('zip')
         Cookie.remove('phone')
-        
+        signOut();
         // the AuthContext and CartContext delete automatically them states
-        router.reload();
+        // Cookie.remove('token');
+        // router.reload();
     }
 
     return (
