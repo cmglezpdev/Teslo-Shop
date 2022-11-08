@@ -32,6 +32,12 @@ export const authOptions = {
     signIn: '/auth/login',
     newUser: '/auth/register',
   },
+  
+  session: {
+    maxAge: 259200, // 30d
+    strategy: 'jwt',
+    updateAge: 86400, // each day
+  },
 
   // Callbacks
   callbacks: {
