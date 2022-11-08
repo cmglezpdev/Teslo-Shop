@@ -1,8 +1,8 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { getSession, signIn } from 'next-auth/react';
-import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
+import { getSession, signIn, getProviders } from 'next-auth/react';
+import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from '@mui/material';
 import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form'
 import { AuthLayout } from '../../layouts';
@@ -21,6 +21,13 @@ const LoginPage = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false);
     const lastPageBeforeLogin = useMemo(() => router.query.p?.toString(), [router.query] );
+    const [providers, setProviders] = useState<any>({})
+
+    useEffect(() => {
+        getProviders().then(prov => {
+            setProviders(prov);
+        })
+    }, [])
 
     const onLoginUser = async ( { email, password }:FormData ) => {
         setShowError(false);
@@ -110,6 +117,28 @@ const LoginPage = () => {
                                 </Link>
                             </NextLink>   
                         </Grid>
+
+                        <Grid item xs={12} display='flex' flexDirection='column' justifyContent='end'>
+                            <Divider sx={{ width: '100%', mb: 2 }} />
+                            {
+                                Object.values( providers ).map((provider: any) => {
+                                    if( provider.id === 'credentials' ) 
+                                        return (<div key='credentials'></div>)
+                                    return (
+                                        <Button
+                                            key={ provider.id }
+                                            variant='outlined'
+                                            fullWidth
+                                            color='primary'
+                                            sx={{ mb: 1 }}
+                                            onClick={() => signIn(provider.id)}
+                                        >
+                                        { provider.name }    
+                                        </Button>
+                                    )
+                                })
+                            }
+                        </Grid>
                     </Grid>
                 </Box>
             </form>
@@ -120,6 +149,7 @@ const LoginPage = () => {
 export default LoginPage;
 
 import { GetServerSideProps } from 'next'
+import { AnyARecord } from 'dns';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
