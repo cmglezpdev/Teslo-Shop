@@ -1,6 +1,7 @@
 import { useState, useContext, useMemo } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { getSession, signIn } from 'next-auth/react';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
 import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form'
@@ -24,21 +25,21 @@ const LoginPage = () => {
     const onLoginUser = async ( { email, password }:FormData ) => {
         setShowError(false);
         
-        const loggedUser = await loginUser(email, password); 
+        // const loggedUser = await loginUser(email, password); 
+        // if( !loggedUser ) {
+        //     console.error('Error in the credentials')
+        //     setShowError(true);
 
-        if( !loggedUser ) {
-            console.error('Error in the credentials')
-            setShowError(true);
-
-            setTimeout(() => {
-                setShowError(false)
-            }, 3000);
-
-            return;
-        }
+        //     setTimeout(() => {
+        //         setShowError(false)
+        //     }, 3000);
+        //     return;
+        // }
         
-        const destination = lastPageBeforeLogin || '/';
-        router.replace(destination)
+        // const destination = lastPageBeforeLogin || '/';
+        // router.replace(destination)
+
+        await signIn('credentials', { email, password })
     }
 
     return (
@@ -117,3 +118,25 @@ const LoginPage = () => {
 }
 
 export default LoginPage;
+
+import { GetServerSideProps } from 'next'
+
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+
+    const session = await getSession({ req });
+    const { p = '/' } = query;
+
+    if( session ) {
+        return {
+            redirect: {
+                destination: p.toString() || '/',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+}
