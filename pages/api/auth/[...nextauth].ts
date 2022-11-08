@@ -27,6 +27,12 @@ export const authOptions = {
     // ...add more providers here
   ],
 
+  // custom pages
+  pages: {
+    signIn: '/auth/login',
+    newUser: '/auth/register',
+  },
+
   // Callbacks
   callbacks: {
     async jwt({ token, account, user }:any) {
