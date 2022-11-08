@@ -1,6 +1,7 @@
 import { useState, useContext, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import { getSession, signIn } from 'next-auth/react';
 import { Box, Button, Grid, Link, TextField, Typography, Chip } from '@mui/material';
 import { ErrorOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
@@ -42,8 +43,9 @@ const RegisterPage = () => {
             return;
         }
 
-        const destination = lastPageBeforeLogin || '/';
-        router.replace( destination )
+        // const destination = lastPageBeforeLogin || '/';
+        // router.replace( destination )
+        await signIn('credentials', { email, password })
     }
 
     return (
@@ -136,3 +138,23 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage;
+
+import { GetServerSideProps } from 'next'
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+
+    const session = await getSession({ req });
+    const { p = '/' } = query;
+
+    if( session )
+        return {
+            redirect: {
+                destination: p.toString(),
+                permanent: false
+            }
+        }
+
+    return {
+        props: {}
+    }
+}
