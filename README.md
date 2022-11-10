@@ -3,6 +3,17 @@
 
 <hr />
 
+## ScreenShots
+![](/asserts_documentation/image_1.png)
+<hr />
+
+![](/asserts_documentation/image_2.png)
+<hr />
+
+![](/asserts_documentation/image_3.png)
+<hr />
+
+
 ## Commands
 
 Para poder correr el proyecto en local se debe ejecutar los siguientes commandos
