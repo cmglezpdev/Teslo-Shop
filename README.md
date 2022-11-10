@@ -1,6 +1,6 @@
 # Teslo Shop | Una tienda en linea de ropa
 > Este proyecto está inspirado en la tienda de Testa shop.tesla.com. Fue creado con el objetivo de aprender Next JS y para crear mi primer ecommerce
-
+> Proyecto en desarrollo todavia
 <hr />
 
 ## ScreenShots
