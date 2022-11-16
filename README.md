@@ -3,6 +3,17 @@
 
 <hr />
 
+## ScreenShots
+![](/asserts_documentation/image_1.png)
+<hr />
+
+![](/asserts_documentation/image_2.png)
+<hr />
+
+![](/asserts_documentation/image_3.png)
+<hr />
+
+
 ## Commands
 
 Para poder correr el proyecto en local se debe ejecutar los siguientes commandos
@@ -26,7 +37,8 @@ yarn start # ejecuta el build de producción
 Renombrar el archivo __.env.template__ a __.env__ y asignarle los valores a las variables de entorno
 
 - __MONGO_URL__: La url de la base de datos de mongo. Si es en desarrollo usamos _mongodb://localhost:27017/teslodb_.
-- __JWT_SECREET_SEED__: Una frase secreta para la creación y validación de los Json Web Tokens.
+<!-- - __JWT_SECREET_SEED__: Una frase secreta para la creación y validación de los Json Web Tokens. -->
+- __NEXTAUTH_SECRET__: Una frase secreta para los Json Web Tokens de _Next Auth_.
 
 <hr />
 
