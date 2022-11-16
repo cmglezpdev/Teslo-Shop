@@ -2,18 +2,22 @@
 > Este proyecto está inspirado en la tienda de Testa shop.tesla.com. Fue creado con el objetivo de aprender Next JS y para crear mi primer ecommerce
 
 __NOTE: Proyecto en desarrollo todavia__
+
 <hr />
 
 ## ScreenShots
+
 ![](/asserts_documentation/image_1.png)
+
 <hr />
 
 ![](/asserts_documentation/image_2.png)
+
 <hr />
 
 ![](/asserts_documentation/image_3.png)
-<hr />
 
+<hr />
 
 ## Commands
 
