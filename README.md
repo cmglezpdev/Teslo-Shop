@@ -12,6 +12,7 @@ docker-compose up -d
 
 yarn dev # ejecuta la aplicacion en desarrollo
 ```
+
 Este levanta la imagen de docker de la base de datos y posteriormente levantar la aplicación en modo desarrollo.
 
 * Otros comandos útiles son:
