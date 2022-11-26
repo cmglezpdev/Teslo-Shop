@@ -1,8 +1,8 @@
 services:
   teslodb:
     image: mongo:5.0.0
-    container_name: teslodb-database
+    container_name: teslodb
     ports:
       - 27017:27017
     volumes:
-      - ./mongo:/data/db 
+      - ./mongo:/data/db
