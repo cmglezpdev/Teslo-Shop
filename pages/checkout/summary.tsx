@@ -9,7 +9,7 @@ import { countries } from '../../database/data/countries';
 
 const SummaryPage = () => {
 
-    const { cart, shippingAddress } = useContext( CartContext )
+    const { cart, shippingAddress, createOrder } = useContext( CartContext )
     
     if( !shippingAddress ) {
         return <></>
@@ -60,7 +60,9 @@ const SummaryPage = () => {
 
                             <OrderSummary />
 
-                            <Box sx={{ mt: 3 }}>
+                            <Box sx={{ mt: 3 }}
+                                onClick={() => createOrder()}
+                            >
                                 <Button className='circular-btn' color='secondary' fullWidth>
                                     Confirm Order
                                 </Button>
