@@ -1,25 +1,13 @@
-import { IUser, IAddress } from '.';
+import { IUser, IAddress, ICartProduct, ICartSummary } from './';
 
 export interface IOrder {
     _i?             : string;
     user?           : IUser | string;
-    orderItems      : IOrderItem[];
+    orderItems      : ICartProduct[];
     shippingAddress : IAddress;
     paymentResult?  : string;
-    numberOfItems   : number;
-    subTotal        : number;
-    tax             : number;
-    total           : number;
-    isPay           : boolean;
-    padidAt?        : string;
+    summary         : ICartSummary;
+    isPaid          : boolean;
+    paidAt?        : string;
 }
 
-export interface IOrderItem {
-    _id      : string;
-    title    : string;
-    size     : string;
-    quantity : number;
-    slug     : string;
-    image    : string;
-    price    : number;
-}
