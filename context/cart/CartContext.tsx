@@ -14,7 +14,10 @@ interface ContextProps {
     updateAddress: (address: IAddress) => void;
 
     // Orders
-    createOrder: () => Promise<void>;
+    createOrder: () => Promise<{
+        hasError: boolean;
+        message: string;
+    }>
 }
 
 
