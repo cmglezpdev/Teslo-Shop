@@ -1,6 +1,7 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import NextLink from 'next/link';
-import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link } from '@mui/material';
+import { useRouter } from 'next/router';
+import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip } from '@mui/material';
 import { CartContext } from '../../context';
 import { ShopLayout } from '../../layouts';
 import { CartList, OrderSummary } from '../../components/cart'
@@ -9,13 +10,30 @@ import { countries } from '../../database/data/countries';
 
 const SummaryPage = () => {
 
+    const router = useRouter();
     const { cart, shippingAddress, createOrder } = useContext( CartContext )
-    
+    const [isPosting, setIsPosting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     if( !shippingAddress ) {
         return <></>
     }
 
     const { name, lastName, address, address_2 = '', city, country, phone, zip } = shippingAddress!;
+
+    const onCreateOrder = async () => {
+        setIsPosting(true);
+
+        const { hasError, message } = await createOrder(); // todo: depende del resultado
+        if( hasError ) {
+            setErrorMessage(message);
+            setIsPosting(false);
+            return;
+        }
+
+        router.replace(`/order/${message}`)
+    }
+
 
     return (
         <ShopLayout title='Order Summary' pageDescription='Order Summary'>
@@ -23,9 +41,7 @@ const SummaryPage = () => {
         
             <Grid container>
                 <Grid item xs={12} sm={7}>
-                    <CartList
-                        cart={cart}
-                    />
+                    <CartList />
                 </Grid>
                 
                 <Grid item xs={12} sm={5}>
@@ -60,12 +76,22 @@ const SummaryPage = () => {
 
                             <OrderSummary />
 
-                            <Box sx={{ mt: 3 }}
-                                onClick={() => createOrder()}
-                            >
-                                <Button className='circular-btn' color='secondary' fullWidth>
+                            <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
+                                <Button 
+                                    className='circular-btn' 
+                                    color='secondary' 
+                                    fullWidth
+                                    onClick={ onCreateOrder }
+                                    disabled={ isPosting }
+                                >
                                     Confirm Order
                                 </Button>
+                                
+                                <Chip
+                                    color='error'
+                                    label={ errorMessage } 
+                                    sx={{ display: errorMessage ? 'flex' : 'none', mt: 1 }} 
+                                />
                             </Box>
                         </CardContent>
                     </Card>
