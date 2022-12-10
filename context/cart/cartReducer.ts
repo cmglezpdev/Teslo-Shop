@@ -11,6 +11,7 @@ type ActionType =
     | { type: '[Cart] Update Cart Summary', payload: ICartSummary }
     | { type: '[Cart] Load Address from Cookies', payload: IAddress }
     | { type: '[Cart] Updated Address', payload: IAddress }
+    | { type: '[Cart] Order complete' }
 
 export const cartReducer = (state: CartState, action:ActionType) => {
     switch( action.type ) {
@@ -56,6 +57,19 @@ export const cartReducer = (state: CartState, action:ActionType) => {
             return {
                 ...state,
                 shippingAddress: action.payload
+            }
+
+        case '[Cart] Order complete':
+            return {
+                ...state,
+                cart: [],
+                summary: {
+                    numberOfProducts: 0,
+                    subTotal:         0,
+                    taxRate:          0,
+                    tax:              0,
+                    totalCost:        0
+                }
             }
 
         default:
