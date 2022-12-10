@@ -1,7 +1,7 @@
 import { IUser, IAddress, ICartProduct, ICartSummary } from './';
 
 export interface IOrder {
-    _i?             : string;
+    _id?             : string;
     user?           : IUser | string;
     orderItems      : ICartProduct[];
     shippingAddress : IAddress;
