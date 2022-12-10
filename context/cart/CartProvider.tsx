@@ -1,5 +1,6 @@
 import { FC, ReactNode, useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie'
+import axios from 'axios';
 import { IAddress, ICartProduct, ICartSummary as ICartSummary } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 import { utilsProduct } from '../../services';
@@ -123,7 +124,7 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
         dispatch({ type: '[Cart] Updated Address', payload: address })
     }
 
-    const createOrder = async() => {
+    const createOrder = async(): Promise<{ hasError: boolean; message: string; }> => {
 
         if( !state.shippingAddress ) {
             throw new Error('There are not address')
@@ -136,10 +137,23 @@ export const CartProvider:FC<{ children: ReactNode }> = ({ children }) => {
             isPaid: false
         }
         try {
-            const { data } = await tesloApi.post('/orders', body)
-            console.log(data);
+            const { data } = await tesloApi.post<IOrder>('/orders', body)
+            
+            // TODO: Dispatch 
+            return {
+                hasError: false,
+                message: data._id!
+            }
         } catch (error) {
-            console.log(error);            
+            if( axios.isAxiosError(error) )
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }            
+            return {
+                hasError: true,
+                message: 'Error is not controlled, please contact with the administrator'
+            }
         }
     }
 
