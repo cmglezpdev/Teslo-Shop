@@ -1,10 +1,20 @@
 import NextLink from 'next/link';
+import { GetServerSideProps, NextPage } from 'next';
 import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip } from '@mui/material';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { ShopLayout } from '../../layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart'
+import { jwt } from '../../services';
+import { dbOrders } from '../../database';
+import { IOrder } from '../../interfaces';
 
-const OrderPage = () => {
+interface Props {
+    order: IOrder;
+}
+
+const OrderPage:NextPage<Props> = ({ order }) => {
+
+    console.log(order);
 
     return (
         <ShopLayout title='Summary of the Order 3263573' pageDescription='Summary of the Order 3263573'>
@@ -85,3 +95,37 @@ const OrderPage = () => {
 }
 
 export default OrderPage;
+
+
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+    const { id = '' } = query;
+    const { token = '' } = req.cookies;
+
+    try {
+        const userId = await jwt.isValidToken(token);
+        const order = await dbOrders.getOrderById(id.toString());
+         if( !order || order.user !== userId ) 
+            return {
+                redirect: {
+                    destination: '/orders/history',
+                    permanent: false
+                }
+            }
+        
+
+        return {
+            props: {
+                order
+            }
+        }
+
+    } catch (error) {
+        return {
+            redirect: {
+                destination: `/auth/login?p=/order/${id}`,
+                permanent: false
+            }
+        }
+    }
+}
