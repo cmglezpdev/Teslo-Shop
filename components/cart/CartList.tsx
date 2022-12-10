@@ -1,18 +1,27 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useState, useEffect } from 'react';
 import NextLink from 'next/link' 
 import { Typography, Link, Grid, CardActionArea, CardMedia, Box, Button } from '@mui/material';
+import Cookies from 'js-cookie';
 import { ItemCounter } from '../ui';
 import { ICartProduct } from '../../interfaces';
 import { CartContext } from '../../context';
 
+
+
 interface Props {
     editable?: boolean;
-    cart: ICartProduct[];
 }
 
-export const CartList:FC<Props> = ({ editable, cart }) => {
+export const CartList:FC<Props> = ({ editable }) => {
     
     const { updateCartQuantity, removeProductCart } = useContext(CartContext);
+    const [cart, setCart] = useState<ICartProduct[]>([]);
+
+    useEffect(() => {
+        const cart = JSON.parse(Cookies.get('cart') || '[]');
+        setCart(cart);
+    }, [])
+
 
     const onNewQuantityValue = (product:ICartProduct, newQuantityValue:number) => {
         product.quantity = newQuantityValue;
