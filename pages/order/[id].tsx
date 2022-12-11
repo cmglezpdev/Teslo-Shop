@@ -2,7 +2,8 @@ import NextLink from 'next/link';
 import { GetServerSideProps, NextPage } from 'next';
 import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip } from '@mui/material';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
-import { ShopLayout } from '../../layouts/ShopLayout';
+import { PayPalButtons } from '@paypal/react-paypal-js';
+import { ShopLayout } from '../../layouts';
 import { CartList, OrderSummary } from '../../components/cart'
 import { jwt } from '../../services';
 import { dbOrders } from '../../database';
@@ -86,9 +87,25 @@ const OrderPage:NextPage<Props> = ({ order }) => {
                                             icon={<CreditScoreOutlined />}
                                             />
                                         ) : (
-                                            <Button className='circular-btn' color='secondary' fullWidth>
-                                                Pay
-                                            </Button>
+                                            <PayPalButtons
+                                                createOrder={(data, actions) => {
+                                                    return actions.order.create({
+                                                        purchase_units: [
+                                                            {
+                                                                amount: {
+                                                                    value: order.summary.totalCost.toString(),
+                                                                },
+                                                            },
+                                                        ],
+                                                    });
+                                                }}
+                                                onApprove={(data, actions) => {
+                                                    return actions.order!.capture().then((details) => {
+                                                        console.log(details);
+                                                        const name = details.payer.name!.given_name;
+                                                    });
+                                                }}
+                                            />
                                         )
                                 }
                             </Box>
