@@ -1,13 +1,14 @@
 import { IUser, IAddress, ICartProduct, ICartSummary } from './';
 
 export interface IOrder {
-    _id?             : string;
+    _id?            : string;
     user?           : IUser | string;
     orderItems      : ICartProduct[];
     shippingAddress : IAddress;
     paymentResult?  : string;
     summary         : ICartSummary;
     isPaid          : boolean;
-    paidAt?        : string;
+    paidAt?         : string;
+    transactionId?  : string
 }
 
