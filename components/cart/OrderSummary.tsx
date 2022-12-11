@@ -12,8 +12,6 @@ interface Props {
 export const OrderSummary:FC<Props> = ({ summary }) => {
 
     const context = useContext(CartContext)
-
-    console.log( summary )
     if( !summary ) summary = context.summary;
 
     return (
