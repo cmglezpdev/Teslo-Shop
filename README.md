@@ -43,9 +43,12 @@ yarn start # ejecuta el build de producción
 Renombrar el archivo __.env.template__ a __.env__ y asignarle los valores a las variables de entorno
 
 - __MONGO_URL__: La url de la base de datos de mongo. Si es en desarrollo usamos _mongodb://localhost:27017/teslodb_.
-<!-- - __JWT_SECREET_SEED__: Una frase secreta para la creación y validación de los Json Web Tokens. -->
-- __NEXTAUTH_SECRET__: Una frase secreta para los Json Web Tokens de _Next Auth_.
-
+- __JWT_SECREET_SEED__: Una frase secreta para la creación y validación de los Json Web Tokens.
+<!-- - __NEXTAUTH_SECRET__: Una frase secreta para los Json Web Tokens de _Next Auth_. -->
+- __NEXT_PUBLIC_PAYPAL_CLIENT_ID__: El `Client ID` token de paypal. 
+- __PAYPAL_SECRET_ID__: El `Secret ID` token de paypal. 
+- __PAYPAL_OAUTH_URL__: Link de Paypal para generar un token de acceso.
+- __PAYPAL_ORDERS_URL__: Link de Paypal para verificar un arden(Este sin el /id_de_la_orden)
 <hr />
 
 ## Documentación de la API
@@ -130,6 +133,18 @@ GET /api/user/validate-token
 
 
 Valida el token que está en las `cookies` y crea uno nuevo
+
+<hr />
+
+### Pagar una orden
+
+```bash
+POST /api/orders/pay
+```
+
+* __Body__:
+    * __transactionId__: id de la transaccion al pagar una orden.
+    * __orderId__: id de la orden a pagar.
 
 <hr />
 
