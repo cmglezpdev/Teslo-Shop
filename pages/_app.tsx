@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider, CssBaseline } from '@mui/material'
+import{ PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { SWRConfig } from  'swr';
 import { lightTheme } from '../themes';
 import { UIProvider, CartProvider, AuthProvider } from '../context';
@@ -13,15 +14,17 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <AuthProvider>
-        <CartProvider>
-          <UIProvider>
-            <ThemeProvider theme={lightTheme}>
-              <CssBaseline>
-                <Component {...pageProps} />
-              </CssBaseline>
-            </ThemeProvider>
-          </UIProvider>
-        </CartProvider>
+        <PayPalScriptProvider options={{ 'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''}}>
+          <CartProvider>
+            <UIProvider>
+              <ThemeProvider theme={lightTheme}>
+                <CssBaseline>
+                  <Component {...pageProps} />
+                </CssBaseline>
+              </ThemeProvider>
+            </UIProvider>
+          </CartProvider>
+        </PayPalScriptProvider>
       </AuthProvider>
     </SWRConfig>
   )
