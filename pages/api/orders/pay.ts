@@ -1,5 +1,8 @@
-import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios';
+import { PaypalOrderStatusResponse } from '../../../interfaces'
+import { db } from '../../../database';
+import { Order } from '../../../models';
 
 type Data = {
     message: string
@@ -43,11 +46,44 @@ const getPayPalBearerToken = async (): Promise<string | null> => {
 }
 
 async function PayOrder(req: NextApiRequest, res: NextApiResponse<Data>) {
+   
+    // TODO: Validar seccion del usuario
+    // TODO: Validar mongoID
+
     const paypalBearerToken = await getPayPalBearerToken();
     
     if( !paypalBearerToken ) {
         return res.status(400).json({ message: 'Invalid Paypal Token' })
     }
+
+    const { transactionId = '', orderId = '' } = req.body;
+    const { data } = await axios.get<PaypalOrderStatusResponse>(`${process.env.PAYPAL_ORDERS_URL}/${transactionId}`, {
+        headers: {
+            'Authorization': `Bearer ${paypalBearerToken}`,
+        }
+    })
+
+    if( data.status !== 'COMPLETED' ) {
+        return res.status(401).json({ message: 'Order no found' })
+    }
+        
+    await db.connect();
+    const dbOrder = await Order.findById(orderId);
     
-    res.status(200).json({ message: paypalBearerToken })
+    if( !dbOrder ) {
+        await db.disconnect();
+        return res.status(401).json({ message: 'Order no found in database' })
+    }
+    
+    if( dbOrder.summary.totalCost !== Number(data.purchase_units[0].amount.value) ) {
+        await db.disconnect();
+        return res.status(401).json({ message: 'The paypal amounts are not equal with own amounts' })
+    }
+
+    dbOrder.transactionId = transactionId;
+    dbOrder.isPaid = true;
+    await dbOrder.save();
+    db.disconnect();
+        
+    res.status(200).json({ message: 'Piad Order' })
 }
