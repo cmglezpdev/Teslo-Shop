@@ -1,12 +1,20 @@
-import { useContext } from 'react';
+import { useContext, FC } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { CartContext } from '../../context';
 import { currency } from '../../services';
+import { ICartSummary } from '../../interfaces';
+
+interface Props {
+    summary?: ICartSummary;
+}
 
 
-export const OrderSummary = () => {
+export const OrderSummary:FC<Props> = ({ summary }) => {
 
-    const { summary } = useContext(CartContext)
+    const context = useContext(CartContext)
+
+    console.log( summary )
+    if( !summary ) summary = context.summary;
 
     return (
         <Grid container>

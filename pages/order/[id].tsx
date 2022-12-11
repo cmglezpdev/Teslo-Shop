@@ -14,77 +14,83 @@ interface Props {
 
 const OrderPage:NextPage<Props> = ({ order }) => {
 
-    console.log(order);
+    const { orderItems, shippingAddress, summary } = order;
 
     return (
-        <ShopLayout title='Summary of the Order 3263573' pageDescription='Summary of the Order 3263573'>
+        <ShopLayout title='Summary of the Order' pageDescription='Summary of the Order'>
             <Typography variant='h1' component='h1' sx={{mb:2}}>Order: ABC123</Typography>
         
-            {/* <Chip 
-                sx={{my: 2}}
-                label='Pending payment'
-                variant='outlined'
-                color='error'
-                icon={<CreditCardOffOutlined />}
-            /> */}
-
-            <Chip 
-                sx={{my: 2}}
-                label='Paid out'
-                variant='outlined'
-                color='success'
-                icon={<CreditScoreOutlined />}
-            />
-
+            {
+                order.isPaid 
+                    ?( 
+                        <Chip 
+                        sx={{my: 2}}
+                        label='Paid out'
+                        variant='outlined'
+                        color='success'
+                        icon={<CreditScoreOutlined />}
+                        />
+                    ) : (
+                        <Chip 
+                        sx={{my: 2}}
+                        label='Pending payment'
+                        variant='outlined'
+                        color='error'
+                        icon={<CreditCardOffOutlined />}
+                        />
+                    )
+            }
 
             <Grid container>
                 <Grid item xs={12} sm={7}>
-                    <CartList />
+                    <CartList
+                        cart={ orderItems }
+                    />
                 </Grid>
                 
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-cart'>
                         <CardContent>
-                            <Typography variant='h2'>Summary (3 products)</Typography>
+                            <Typography variant='h2'>Summary {`(${orderItems.length} ${ orderItems.length === 1 ? 'product' : 'products' })`}</Typography>
                             
                             <Divider sx={{my:1}} />
 
                             <Box display='flex' justifyContent='space-between'>
-                                <Typography variant='subtitle1'>Dirección de Entrega</Typography>
+                                <Typography variant='subtitle1'>Delivery Address</Typography>
                                 <NextLink href='/checkout/address' passHref >
                                     <Link underline='always'>Edit</Link>
                                 </NextLink>
                             </Box>
 
-                            <Typography>Fernando Herrera</Typography>
-                            <Typography>3q3 Algun Lugar</Typography>
-                            <Typography>Stittsville, HYA 235</Typography>
-                            <Typography>Canadá</Typography>
-                            <Typography>+1 467483932</Typography>
+                            <Typography>{`${shippingAddress.name} ${shippingAddress.lastName}`}</Typography>
+                            <Typography>{`${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.zip}`}</Typography>
+                            <Typography>{`${shippingAddress.address_2}`}</Typography>
+                            <Typography>{`${shippingAddress.country}`}</Typography>
+                            <Typography>{`${shippingAddress.phone}`}</Typography>
                             
                             <Divider sx={{my:1}} />
-                            
-                            <Box display='flex' justifyContent='space-between'>
-                                <Typography variant='subtitle1'>Order</Typography>
-                                <NextLink href='/cart' passHref >
-                                    <Link underline='always'>Edit</Link>
-                                </NextLink>
-                            </Box>
-
-                            <OrderSummary />
+                    
+                            <OrderSummary
+                                summary={summary}
+                            />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button className='circular-btn' color='secondary' fullWidth>
-                                    Pay
-                                </Button>
-
-                                <Chip 
-                                    sx={{my: 2}}
-                                    label='Paid out'
-                                    variant='outlined'
-                                    color='success'
-                                    icon={<CreditScoreOutlined />}
-                                 />
+                                {
+                                    order.isPaid
+                                        ? (
+                                            <Chip 
+                                            sx={{my: 2}}
+                                            label='Paid out'
+                                            variant='outlined'
+                                            color='success'
+                                            icon={<CreditScoreOutlined />}
+                                            />
+                                        ) : (
+                                            <Button className='circular-btn' color='secondary' fullWidth>
+                                                Pay
+                                            </Button>
+                                        )
+                                }
                             </Box>
                         </CardContent>
                     </Card>
