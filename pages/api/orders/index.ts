@@ -57,6 +57,7 @@ async function createOrder(req: NextApiRequest, res: NextApiResponse<Data>) {
         // Verifications Passed
 
         const newOrder = new Order({ ...req.body, isPaid: false, user: userId });
+        newOrder.summary.totalCost = Math.round( newOrder.summary.totalCost * 100 ) / 100;
         await newOrder.save();
 
         return res.status(201).json( newOrder )    
