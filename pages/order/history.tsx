@@ -1,7 +1,13 @@
-import { Typography, Grid, Chip, Link } from '@mui/material';
-import { ShopLayout } from '../../layouts';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+
+import { GetServerSideProps, NextPage } from 'next'
 import NextLink from 'next/link';
+import { useEffect, useState } from 'react';
+import { Typography, Grid, Chip, Link } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { ShopLayout } from '../../layouts';
+import { jwt } from '../../services';
+import { dbOrders } from '../../database';
+import { IOrder } from '../../interfaces';
 
 const columns:GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -35,26 +41,34 @@ const columns:GridColDef[] = [
 
 ];
 
-const rows = [
-    { id: 1, payment: true, fullname: 'Carlos Manuel' },
-    { id: 2, payment: true, fullname: 'Victor Bravo' },
-    { id: 3, payment: false, fullname: 'Emin Reyes' },
-    { id: 4, payment: false, fullname: 'Alex Sanchez' },
-    { id: 5, payment: true, fullname: 'Fernamdo Herrera' },
-    { id: 6, payment: false, fullname: 'Manolo Pablo' },
-    { id: 7, payment: true, fullname: 'Juan Carlos Gonzalez' },
-]
+interface Props {
+    orders: IOrder[];
+}
+
+const HistoryPage:NextPage<Props> = ({ orders }) => {
+
+    const [allOrders, setAllOrders] = useState<{payment:boolean; id: string; fullname: string}[]>([]);
+
+    useEffect(() => {
+        const rows = [
+            ...orders.map(order => ({
+                payment: order.isPaid,
+                id: order._id!,
+                fullname: `${order.shippingAddress.name} ${order.shippingAddress.lastName}` 
+            }))
+        ]
+        setAllOrders(rows);
+    }, [orders])
 
 
-const HistoryPage = () => {
     return (
         <ShopLayout title='Orders History' pageDescription='Orders History of the Client'>
             <Typography variant='h1' component='h1'>Order history</Typography>
         
-            <Grid container>
+            <Grid container sx={{mt: 2}}>
                 <Grid item xs={12} sx={{height: 650, width: '100%'}}>
                     <DataGrid 
-                        rows={rows}
+                        rows={allOrders}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
@@ -66,3 +80,29 @@ const HistoryPage = () => {
 }
 
 export default HistoryPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+    const { token = '' } = req.cookies;
+    
+    try {
+        const userId = await jwt.isValidToken(token);
+        const orders = await dbOrders.getOrdersFromUser(userId);
+
+        if( !orders )
+            return {
+                redirect: { destination: '/', permanent: false }
+            }
+
+        return {
+            props: { orders }
+        }
+
+    } catch (error) {
+        return {
+            redirect: {
+                destination: '/auth/login?p=/order/history',
+                permanent: false
+            }
+        }
+    }
+}
