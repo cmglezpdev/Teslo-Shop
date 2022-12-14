@@ -1,4 +1,3 @@
-
 import { GetServerSideProps, NextPage } from 'next'
 import NextLink from 'next/link';
 import { useEffect, useState } from 'react';
@@ -65,7 +64,7 @@ const HistoryPage:NextPage<Props> = ({ orders }) => {
         <ShopLayout title='Orders History' pageDescription='Orders History of the Client'>
             <Typography variant='h1' component='h1'>Order history</Typography>
         
-            <Grid container sx={{mt: 2}}>
+            <Grid container sx={{mt: 2}} className='fadeIn'>
                 <Grid item xs={12} sx={{height: 650, width: '100%'}}>
                     <DataGrid 
                         rows={allOrders}

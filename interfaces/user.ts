@@ -11,4 +11,4 @@ export interface IUser {
     updatedAt?:  string;
 }
 
-export type IRole = 'admin' | 'client';
+export type IRole = 'admin' | 'client' | 'super-user' | 'SEO';
