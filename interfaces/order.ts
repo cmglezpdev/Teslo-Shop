@@ -9,6 +9,8 @@ export interface IOrder {
     summary         : ICartSummary;
     isPaid          : boolean;
     paidAt?         : string;
-    transactionId?  : string
+    transactionId?  : string;
+
+    createdAt       : string;
 }
 
