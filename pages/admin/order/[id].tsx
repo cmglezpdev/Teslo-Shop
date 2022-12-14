@@ -56,14 +56,8 @@ const OrderPage:NextPage<Props> = ({ order }) => {
                             <Typography variant='h2'>Summary {`(${orderItems.length} ${ orderItems.length === 1 ? 'product' : 'products' })`}</Typography>
                             
                             <Divider sx={{my:1}} />
-
-                            <Box display='flex' justifyContent='space-between'>
-                                <Typography variant='subtitle1'>Delivery Address</Typography>
-                                <NextLink href='/checkout/address' passHref >
-                                    <Link underline='always'>Edit</Link>
-                                </NextLink>
-                            </Box>
-
+                            
+                            <Typography variant='subtitle1'>Delivery Address</Typography>
                             <Typography>{`${shippingAddress.name} ${shippingAddress.lastName}`}</Typography>
                             <Typography>{`${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.zip}`}</Typography>
                             <Typography>{`${shippingAddress.address_2}`}</Typography>
@@ -118,7 +112,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
     const { token = '' } = req.cookies;
 
     try {
-        const userId = await jwt.isValidToken(token);
         const order = await dbOrders.getOrderById(id.toString());
          if( !order ) 
             return {
