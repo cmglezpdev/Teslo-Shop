@@ -1,9 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next';
-import NextLink from 'next/link';
-import { Typography, Grid, Card, CardContent, Divider, Box, Button, Link, Chip, CircularProgress } from '@mui/material';
+import { Typography, Grid, Card, CardContent, Divider, Box, Chip } from '@mui/material';
 import { AirplaneTicketOutlined, CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { CartList, OrderSummary } from '../../../components/cart'
-import { jwt } from '../../../services';
 import { dbOrders } from '../../../database';
 import { IOrder } from '../../../interfaces';
 import { AdminLayout } from '../../../layouts';

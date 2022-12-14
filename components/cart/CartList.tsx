@@ -2,7 +2,7 @@ import { FC, useContext, useState, useEffect } from 'react';
 import NextLink from 'next/link' 
 import { Typography, Link, Grid, CardActionArea, CardMedia, Box, Button } from '@mui/material';
 import { ItemCounter } from '../ui';
-import { ICartProduct, IProduct } from '../../interfaces';
+import { ICartProduct } from '../../interfaces';
 import { CartContext } from '../../context';
 
 
@@ -84,8 +84,6 @@ export const CartList:FC<Props> = ({ editable, cart: cartProps }) => {
                                 </Button>)
                             }
                         </Grid>
-
-
                     </Grid>
                 ))
             }
