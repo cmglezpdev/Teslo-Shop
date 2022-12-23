@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
@@ -38,6 +38,7 @@ interface Props {
 const ProductAdminPage:FC<Props> = ({ product }) => {
 
     const router = useRouter();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [tagInput, setTagInput] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
@@ -88,6 +89,21 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         const currentTags = getValues('tags');
         console.log(currentTags)
         setValue('tags', currentTags.filter(t => t !== tag), { shouldValidate: true })
+    }
+
+    const onFilesSelected = async ({target}: ChangeEvent<HTMLInputElement>) => {
+        if( !target.files || target.files.length === 0 ) return;
+        
+        try {
+            for( const file of target.files ) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData);
+                console.log(data);
+            }
+        } catch (error) {
+            
+        }
     }
 
     const onSubmit = async ( formData: FormData ) => {
@@ -308,10 +324,19 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                                 fullWidth
                                 startIcon={ <UploadOutlined /> }
                                 sx={{ mb: 3 }}
+                                onClick={() => fileInputRef.current?.click()}
                             >
                                 Upload Images
                             </Button>
-
+                            <input
+                                ref={ fileInputRef }
+                                type="file"
+                                multiple
+                                accept='image/png, image/jpeg, image/gif'
+                                style={{ display: 'none' }}
+                                onChange={ onFilesSelected }
+                            />
+                            
                             <Chip 
                                 label="At least two images are required"
                                 color='error'
