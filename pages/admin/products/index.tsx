@@ -17,7 +17,7 @@ const columns:GridColDef[] = [
                         component='img'
                         className='fadeIn'
                         alt={row.title}
-                        image={`/products/${row.img}`}
+                        image={`${row.img}`}
                     />
                 </a>
             )

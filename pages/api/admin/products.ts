@@ -4,6 +4,10 @@ import { db } from '../../../database';
 import { Product } from '../../../models';
 import { IProduct } from '../../../interfaces';
 
+import { v2 as cloundinary } from 'cloudinary'
+cloundinary.config(process.env.CLOUDINARY_URL || '');
+
+
 type Data = 
     | { message: string }
     | IProduct[]
@@ -37,9 +41,17 @@ async function getProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
                         .lean();
 
     await db.disconnect(); 
-    // TODO: Actualizar las imagenes
+    const updatedProducts = products.map( product => {
+        product.images = product.images.map( img => {
+            return img.includes('http') ?
+                img :
+                `${process.env.HOST_NAME}products/${img}`;
+        })
 
-    res.status(200).json(products);
+        return product;
+    })
+
+    res.status(200).json(updatedProducts);
 }  
 
 async function updateProduct(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -60,7 +72,14 @@ async function updateProduct(req: NextApiRequest, res: NextApiResponse<Data>) {
         if(!product)  
             return res.status(400).json({ message: 'The product does not exist' });
             
-        // TODO: Delete images from cloudinary
+        // https://res.cloudinary.com/dofsbymp4/image/upload/v1671832148/ujxxcqehs4b9as05t4it.jpg
+        product.images.forEach(async(image:string) => {
+            if( !images.includes(image) ) {
+                // Delete clouldinary image
+                const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.');
+                await cloundinary.uploader.destroy( fileId );
+            }
+        })
         
         await product.update(req.body);
         // await product.save();
