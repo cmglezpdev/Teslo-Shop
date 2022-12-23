@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -7,6 +8,7 @@ import { dbProducts } from '../../../database';
 import { AdminLayout } from '../../../layouts';
 import { IProduct } from '../../../interfaces';
 import tesloApi from '../../../api/tesloApi';
+import { Product } from '../../../models';
 
 
 const validTypes  = ['shirts','pants','hoodies','hats']
@@ -35,6 +37,7 @@ interface Props {
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
 
+    const router = useRouter();
     const [tagInput, setTagInput] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
@@ -96,20 +99,18 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         try {
             const { data } = await tesloApi({
                 url: '/admin/products',
-                method: 'PUT', // if have _id then PUT else POST
+                method:  formData._id ? 'PUT' : 'POST',
                 data: formData
             })
             console.log({ data  });
             if( !formData._id ) {
-                // recargar navegador
+                router.replace(`/admin/products/${ data.slug }`)
             } 
         } catch (error) {
             console.log(error)
         } finally {
             setIsSaving(false);
-        }
-
-        
+        }   
     }
 
     return (
@@ -354,7 +355,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     
     const { slug = ''} = query;
     
-    const product = await dbProducts.getProductBySlug(slug.toString());
+    let product: IProduct | null;
+    if( slug === 'create' ) {
+        const tempProduct = JSON.parse( JSON.stringify( new Product() ) );
+        delete tempProduct._id;
+        tempProduct.images = ['img1.jpg', 'img2.jpg'];
+        product = tempProduct;
+    } else
+        product = await dbProducts.getProductBySlug(slug.toString());
 
     if ( !product ) {
         return {
