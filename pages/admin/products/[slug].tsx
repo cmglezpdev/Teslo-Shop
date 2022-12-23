@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { dbProducts } from '../../../database';
 import { AdminLayout } from '../../../layouts';
 import { IProduct } from '../../../interfaces';
+import tesloApi from '../../../api/tesloApi';
 
 
 const validTypes  = ['shirts','pants','hoodies','hats']
@@ -35,6 +36,7 @@ interface Props {
 const ProductAdminPage:FC<Props> = ({ product }) => {
 
     const [tagInput, setTagInput] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
         defaultValues: product,
@@ -85,8 +87,29 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         setValue('tags', currentTags.filter(t => t !== tag), { shouldValidate: true })
     }
 
-    const onSubmit = ( formData: FormData ) => {
-        console.log(formData)
+    const onSubmit = async ( formData: FormData ) => {
+        if( formData.images.length < 2 ) 
+            return alert('You need to upload at least two images')
+        
+        setIsSaving(true);
+
+        try {
+            const { data } = await tesloApi({
+                url: '/admin/products',
+                method: 'PUT', // if have _id then PUT else POST
+                data: formData
+            })
+            console.log({ data  });
+            if( !formData._id ) {
+                // recargar navegador
+            } 
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsSaving(false);
+        }
+
+        
     }
 
     return (
@@ -102,6 +125,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                         startIcon={ <SaveOutlined /> }
                         sx={{ width: '150px' }}
                         type="submit"
+                        disabled={ isSaving }
                         >
                         Save
                     </Button>
