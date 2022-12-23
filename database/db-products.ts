@@ -13,6 +13,8 @@ export const getProductBySlug = async ( slug: string ):Promise<IProduct | null> 
         return null;
     }
 
+    // TODO: Procesamiento de imagenes del product
+
     return JSON.parse( JSON.stringify( product ) );
 }
 
