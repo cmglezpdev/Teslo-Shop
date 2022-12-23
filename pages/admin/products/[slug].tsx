@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next'
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
@@ -34,6 +34,8 @@ interface Props {
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
 
+    const [tagInput, setTagInput] = useState('');
+
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
         defaultValues: product,
     })
@@ -66,8 +68,21 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         );
     }
 
-    const onDeleteTag = ( tag: string ) => {
+    const onNewTag = () => {
+        const tag  = tagInput.trim().toLowerCase();
+        setTagInput('');
+        const tags = getValues('tags');
+        setValue(
+            'tags',
+            tags.includes(tag) ? tags : [...tags, tag],
+            { shouldValidate: true }
+        )
+    }
 
+    const onDeleteTag = ( tag: string ) => {
+        const currentTags = getValues('tags');
+        console.log(currentTags)
+        setValue('tags', currentTags.filter(t => t !== tag), { shouldValidate: true })
     }
 
     const onSubmit = ( formData: FormData ) => {
@@ -227,6 +242,9 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                         <TextField
                             label="Tags"
                             variant="filled"
+                            value={ tagInput }
+                            onChange={({ target }) => setTagInput(target.value)}
+                            onKeyUp={ ({ code }) => code === 'Space' ? onNewTag() : null }
                             fullWidth 
                             sx={{ mb: 1 }}
                             helperText="Press [spacebar] to save"
@@ -241,7 +259,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                         }}
                         component="ul">
                             {
-                                product.tags.map((tag) => {
+                                getValues('tags').map((tag) => {
 
                                 return (
                                     <Chip
