@@ -143,7 +143,7 @@ export const SideMenu = () => {
                             <ListItemText primary='Dasboard' />
                         </ListItem>
 
-                        <ListItem button>
+                        <ListItem button onClick={() => navigateTo('/admin/products')}>
                             <ListItemIcon>
                                 <CategoryOutlined/>
                             </ListItemIcon>
