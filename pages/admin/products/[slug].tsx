@@ -38,6 +38,20 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         defaultValues: product,
     })
 
+    const onChangeSize = ( size: string ) => {
+        const currentSizes = getValues('sizes');
+        if( currentSizes.includes(size) )
+            return setValue(
+                'sizes',
+                currentSizes.filter(s => s !== size),
+                { shouldValidate: true }
+            )
+        return setValue(
+            'sizes',
+            [...currentSizes, size],
+            { shouldValidate: true }
+        );
+    }
 
     const onDeleteTag = ( tag: string ) => {
 
@@ -170,7 +184,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             <FormLabel>Sizes</FormLabel>
                             {
                                 validSizes.map(size => (
-                                    <FormControlLabel key={size} control={<Checkbox />} label={ size } />
+                                    <FormControlLabel
+                                        key={size} 
+                                        control={<Checkbox checked={ getValues('sizes').includes(size) }/>} 
+                                        onChange={() => onChangeSize(size)}
+                                        label={ size } 
+                                    />
                                 ))
                             }
                         </FormGroup>
