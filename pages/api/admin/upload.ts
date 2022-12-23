@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import formidable from 'formidable'
 import fs from 'fs'
+import { v2 as cloundinary } from 'cloudinary'
+
+cloundinary.config(process.env.CLOUDINARY_URL || '');
 
 type Data = {
     message: string
@@ -23,28 +26,32 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 // save en hard disk
-const saveFile = async (file: formidable.File) => {
-    const data = fs.readFileSync(file.filepath);
-    fs.writeFileSync(`./public/${file.originalFilename}`, data);
-    fs.unlinkSync(file.filepath);
+// const saveFile = async (file: formidable.File) => {
+//     const data = fs.readFileSync(file.filepath);
+//     fs.writeFileSync(`./public/${file.originalFilename}`, data);
+//     fs.unlinkSync(file.filepath);
+// }
+
+const saveFile = async (file: formidable.File): Promise<string> => {
+    const { secure_url } = await cloundinary.uploader.upload( file.filepath );
+    return secure_url;
 }
 
-const parseFiles = async (req: NextApiRequest) => {
+const parseFiles = async (req: NextApiRequest): Promise<string> => {
     return new Promise((resolve, reject) => {
         const form = new formidable.IncomingForm();
         form.parse(req, async(error, fields, files) => {
             if (error) 
                 reject(error)
-            await saveFile( files.file as formidable.File );
-            resolve(true);
+            const filepath = await saveFile( files.file as formidable.File );
+            resolve(filepath);
         })
     });
 }
 
 async function uploadFile(req: NextApiRequest, res: NextApiResponse<Data>) {
     
-    console.log('sdgshsdjdjkfs');
-    await parseFiles(req);
+    const imageUrl = await parseFiles(req);
         
-    res.status(200).json({ message: 'Uploaded Image' })
+    res.status(200).json({ message: imageUrl })
 }
